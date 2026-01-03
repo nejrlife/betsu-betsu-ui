@@ -1,0 +1,89 @@
+.leftSider {
+  width: 300px;
+  min-height: 500px;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none; /* Remove bullets */
+}
+
+li a {
+  font-family: Microsoft JhengHei, arial;
+  font-weight: bold;
+  font-size: 28px;
+  color: #CC0000;
+}
+
+li a:hover {
+  color: #CC0000;
+}
+
+#sidebar a.active {
+  color: #666666;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  #sidebar {
+    display: flex;
+    flex-direction: row;
+    justify-content: initial;
+  }
+  #sidebar hr{
+    display: none;
+  }
+  .leftSider {
+    width: initial;
+    min-height: initial;
+    padding: 0px !important;
+  }
+  li {
+    height: 40px;
+    width: 33.4%;
+  }
+  li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767.5px) {
+
+  ul {
+    margin: 0px;
+  }
+  li {
+    height: 40px;
+    width: 33.4%;
+  }
+  li a {
+    font-family: Microsoft JhengHei, arial;
+    font-weight: initial;
+    font-size: 16px;
+    color: #CC0000;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  li a.active {
+    color: #FFFFFF !important;
+    background-color: #CC0000;
+  }
+  #sidebar {
+    display: flex;
+    flex-direction: row;
+    justify-content: initial;
+  }
+  #sidebar hr{
+    display: none;
+  }
+  .leftSider {
+    width: initial;
+    min-height: initial;
+    padding: 0px !important;
+  }
+}

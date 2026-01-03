@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render Login page and components 1`] = `
+<div>
+  <div
+    class="loginLayoutWidth"
+  >
+    <div
+      class="headerFlex red-box"
+    >
+      <p
+        class="js_framework"
+      >
+        React JS
+      </p>
+      <p
+        class="heading"
+      >
+        betsu-betsu
+      </p>
+      <div
+        class="logoutFlex"
+      />
+    </div>
+    <div
+      class="loginContainer"
+    >
+      <form>
+        <div
+          class="formContainer"
+        >
+          <div
+            class="formFieldFlex"
+          >
+            <label>
+              <p>
+                User ID
+              </p>
+            </label>
+            <input
+              name="userId"
+              placeholder="Enter User ID"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="validationFlex"
+          >
+            <div />
+            <span />
+          </div>
+          <div
+            class="formFieldFlex"
+          >
+            <label>
+              <p>
+                Password
+              </p>
+            </label>
+            <input
+              name="password"
+              placeholder="Password"
+              type="password"
+              value=""
+            />
+          </div>
+          <div
+            class="validationFlex"
+          >
+            <div />
+            <span />
+          </div>
+          <button
+            class="basic-button"
+            type="submit"
+          >
+            Log In
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

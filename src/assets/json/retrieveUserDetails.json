@@ -1,0 +1,21 @@
+{
+  "success": "true",
+  "customer": {
+    "id": "IJ101",
+    "name": "Tom Jha",
+    "last_login": "04 Feb 2018",
+    "balance": "£3000",
+    "transaction": [
+      {
+        "date": "01 Feb 2018",
+        "desc": "Room Rent",
+        "amount": "£700"
+      },
+      {
+        "date": "02 Feb 2018",
+        "desc": "Morrision",
+        "amount": "£40"
+      }
+    ]
+  }
+}

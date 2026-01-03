@@ -1,0 +1,41 @@
+.headerFlex {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 115px;
+}
+.logoutFlex {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.logoutFlex svg{
+  cursor: pointer;
+}
+.js_framework {
+  font-family: Microsoft JhengHei;
+  font-size: 14px;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+}
+.heading {
+  font-family: Microsoft JhengHei;
+  font-size: 48px;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .headerFlex {
+    height: initial;
+  }
+}
+
+@media (max-width: 767.5px) {
+  .headerFlex {
+    width: initial;
+    height: initial;
+  }
+}

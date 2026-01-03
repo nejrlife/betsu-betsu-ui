@@ -1,0 +1,54 @@
+.errorPageContainer {
+  width: 688px;
+  height: auto;
+}
+.errorPageContainer a {
+  font-family: Microsoft JhengHei;
+  font-size: 18px;
+  color: #000;
+  text-decoration: underline;
+}
+.errorPageContainer a:hover {
+  color: #000;
+  cursor: pointer;
+  text-decoration: none;
+}
+.errorPageHeader {
+  font-family: Microsoft JhengHei;
+  font-size: 32px;
+}
+.errorMessage {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #DD5656;
+}
+.errorMessage p {
+  margin: 0;
+  padding: 20px;
+  color: #FFFFFF;
+  font-style: italic;
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .errorPageContainer {
+    width: initial;
+  }
+  .errorPageLayoutWidth {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 767.5px) {
+  .errorPageContainer {
+    width: initial;
+  }
+  .errorPageLayoutWidth {
+    width: 90%;
+    height: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+  }
+}
