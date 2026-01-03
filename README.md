@@ -1,6 +1,6 @@
-# betsu-betsu Front End
+# betsu-betsu-ui Front End
 
-betsu-betsu FE is a simple web application developed using React.js.
+betsu-betsu-ui FE is a simple web application developed using React.js.
 
 This application is deployed in Vercel and can be accessed thru the following link:
 
