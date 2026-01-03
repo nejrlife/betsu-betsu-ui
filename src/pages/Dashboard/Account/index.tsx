@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
-import Skeleton from '@mui/material/Skeleton';
+// import Skeleton from '@mui/material/Skeleton';
 import "./Account.less";
-import { AccountDetail } from "../types";
-import { get, find, partition } from 'lodash';
-import { useNavigate } from "react-router-dom";
+// import { AccountDetail } from "../types";
+// import { get, find, partition } from 'lodash';
+// import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -12,10 +12,10 @@ import Typography from '@mui/material/Typography';
 import { AccordionDetails } from "@mui/material";
 import ReusableCard from "../../../components/ReusableCard";
 
-const Account = (props: any) => {
+const Account = (_props: any) => {
 
   
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
   }, []);

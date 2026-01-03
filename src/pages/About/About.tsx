@@ -1,6 +1,6 @@
 import "./About.less";
 import placeholder from "../../assets/img/static_placeholder.jpg";
-import ReusableCard from "../../components/ReusableCard";
+// import ReusableCard from "../../components/ReusableCard";
 
 const About = () => {
   return (
