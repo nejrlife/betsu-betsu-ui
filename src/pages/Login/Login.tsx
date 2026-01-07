@@ -36,8 +36,6 @@ const Login = (props: any) => {
       setErrorMessage('Please enter login credentials to continue');
       return;
     }
-    // You can handle form submission logic here, e.g., send data to a server or perform client-side validation
-    console.log('Form submitted with data:', event);
     dispatch({
       type: LOG_IN,
       payload: {

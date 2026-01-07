@@ -34,9 +34,9 @@ export interface UserAccounts {
 }
 
 export interface CurrentOpenedAccount {
-  accountId: string,
-  expandAcctsError: string,
-  expandAcctsPending: boolean,
+  expandedAcctId: string,
+  expandedAcctError: string,
+  expandedAcctPending: boolean,
   expandedAcctDetails: ExpandedAccountDetails;
 }
 
@@ -46,28 +46,29 @@ export interface  Account {
 }
 
 export interface ExpandedAccountDetails {
-  expenses: Expense[] | null;
-  payments: Payment[] | null;
-}
-
-export interface Expense {
   name: string;
-  date: string;
-  expenseItems: ExpenseItem[];
-  remarks: string;
+  dateOpened: string;
+  isAccountOpen: boolean;
+  isAccountPriority: boolean;
+  expenseDetails: ExpenseItem[] | null;
+  paymentDetails: Payment[] | null;
+  addExpenseItemPending: boolean;
+  addExpenseItemStatus: string;
 }
 
 export interface ExpenseItem {
+  _id: string
   cashOutByMemberId: string;
   forMemberId: string;
   amount: string;
   remarks: string;
+  createdAt: string;
 }
 
 export interface Payment {
   amount: string;
   paidByMemberId: string;
   paidToMemberId: string;
-  date: string;
+  createdAt: string;
   remarks: string;
 }

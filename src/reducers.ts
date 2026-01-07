@@ -18,8 +18,14 @@ const initRetrieveMembersDetailsState : MembersDetails = {
 };
 
 const initExpandedAcctDetailsState : ExpandedAccountDetails = {
-  expenses: null,
-  payments: null
+  name: '',
+  dateOpened: '',
+  isAccountOpen: false,
+  isAccountPriority: false,
+  expenseDetails: null,
+  paymentDetails: null,
+  addExpenseItemPending: false,
+  addExpenseItemStatus: ''
 };
 
 const INITIAL_STATE : AppDetails = {
@@ -31,9 +37,9 @@ const INITIAL_STATE : AppDetails = {
     retrieveAccountsPending: false,
   },
   currentOpenedAccount: {
-    accountId: '',
-    expandAcctsError: '',
-    expandAcctsPending: false,
+    expandedAcctId: '',
+    expandedAcctError: '',
+    expandedAcctPending: false,
     expandedAcctDetails: { ...initExpandedAcctDetailsState },
   },
   membersDetails: { ...initRetrieveMembersDetailsState },
@@ -98,35 +104,32 @@ export default function appReducer(state = INITIAL_STATE, action: any) {
           retrieveAccountsPending: true
         }
       };
-    case actions.EXPAND_ACCOUNT_DETAILS_SUCCESS:
+    case actions.RETRIEVE_EXPANDED_ACCOUNT_DETAILS_SUCCESS:
       return {
         ...state,
         currentOpenedAccount: {
-          accountId: action.payload.accountId,
-          expandAcctsError: '',
-          expandAcctsPending: false,
-          expandedAcctDetails: {
-            expenses: action.payload.expenses,
-            payments: action.payload.payments
-          },
+          expandedAcctId: action.payload.expandedAcctDetails._id,
+          expandedAcctError: '',
+          expandedAcctPending: false,
+          expandedAcctDetails: { ...action.payload.expandedAcctDetails },
         }
       };
-    case actions.EXPAND_ACCOUNT_DETAILS_FAILURE:
+    case actions.RETRIEVE_EXPANDED_ACCOUNT_DETAILS_FAILURE:
       return {
         ...state,
         currentOpenedAccount: {
-          accountId: action.payload.accountId,
-          expandAcctsError: action.payload.errMessage,
-          expandAcctsPending: false,
+          expandedAcctId: action.payload.accountId,
+          expandedAcctError: action.payload.errMessage,
+          expandedAcctPending: false,
           expandedAcctDetails: { ...initExpandedAcctDetailsState },
         }
       };
-    case actions.EXPAND_ACCOUNT_DETAILS_PENDING:
+    case actions.RETRIEVE_EXPANDED_ACCOUNT_DETAILS_PENDING:
       return {
         ...state,
         currentOpenedAccount: {
           ...state.currentOpenedAccount,
-          expandAcctsPending: true,
+          expandedAcctPending: true,
         }
       };
     case actions.PROGRESS_SPINNER_SHOW:
@@ -195,6 +198,46 @@ export default function appReducer(state = INITIAL_STATE, action: any) {
           retrieveMembersDetailsPending: true
         }
       };
+      case actions.ADD_EXPENSE_ITEM_SUCCESS:
+        return {
+          ...state,
+          currentOpenedAccount: {
+            ...state.currentOpenedAccount,
+            expandedAcctDetails: {
+              ...state.currentOpenedAccount.expandedAcctDetails,
+              expenseDetails: [
+                ...(state.currentOpenedAccount.expandedAcctDetails.expenseDetails ?? []),
+                action.payload.newExpenseItem,
+              ],
+              addExpenseItemPending: false,
+              addExpenseItemStatus: 'success'
+            },
+          }
+        };
+        case actions.ADD_EXPENSE_ITEM_FAILURE:
+          return {
+            ...state,
+            currentOpenedAccount: {
+              ...state.currentOpenedAccount,
+              expandedAcctDetails: {
+                ...state.currentOpenedAccount.expandedAcctDetails,
+                addExpenseItemPending: false,
+                addExpenseItemStatus: 'failure'
+              },
+            }
+          };
+      case actions.ADD_EXPENSE_ITEM_PENDING:
+        return {
+          ...state,
+          currentOpenedAccount: {
+            ...state.currentOpenedAccount,
+            expandedAcctDetails: {
+              ...state.currentOpenedAccount.expandedAcctDetails,
+              addExpenseItemPending: true,
+              addExpenseItemStatus: ''
+            },
+          }
+        };
     default:
       return state;
   }
