@@ -1,4 +1,4 @@
-import "./ReusableCard.less";
+import "./ExpenseItemCard.less";
 // import { useState } from "react";
 // import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
-const ReusableCard = (props: any) => {
+const ExpenseItemCard = (props: any) => {
 
   // const bull = (
   //   <Box
@@ -68,4 +68,4 @@ const ReusableCard = (props: any) => {
     </Card>
   )
 }
-export default ReusableCard;
+export default ExpenseItemCard;

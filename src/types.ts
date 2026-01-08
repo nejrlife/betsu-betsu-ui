@@ -54,6 +54,8 @@ export interface ExpandedAccountDetails {
   paymentDetails: Payment[] | null;
   addExpenseItemPending: boolean;
   addExpenseItemStatus: string;
+  makePaymentItemPending: boolean;
+  makePaymentItemStatus: string;
 }
 
 export interface ExpenseItem {

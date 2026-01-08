@@ -25,7 +25,9 @@ const initExpandedAcctDetailsState : ExpandedAccountDetails = {
   expenseDetails: null,
   paymentDetails: null,
   addExpenseItemPending: false,
-  addExpenseItemStatus: ''
+  addExpenseItemStatus: '',
+  makePaymentItemPending: false,
+  makePaymentItemStatus: ''
 };
 
 const INITIAL_STATE : AppDetails = {
@@ -198,34 +200,34 @@ export default function appReducer(state = INITIAL_STATE, action: any) {
           retrieveMembersDetailsPending: true
         }
       };
-      case actions.ADD_EXPENSE_ITEM_SUCCESS:
+    case actions.ADD_EXPENSE_ITEM_SUCCESS:
+      return {
+        ...state,
+        currentOpenedAccount: {
+          ...state.currentOpenedAccount,
+          expandedAcctDetails: {
+            ...state.currentOpenedAccount.expandedAcctDetails,
+            expenseDetails: [
+              ...(state.currentOpenedAccount.expandedAcctDetails.expenseDetails ?? []),
+              action.payload.newExpenseItem,
+            ],
+            addExpenseItemPending: false,
+            addExpenseItemStatus: 'success'
+          },
+        }
+      };
+      case actions.ADD_EXPENSE_ITEM_FAILURE:
         return {
           ...state,
           currentOpenedAccount: {
             ...state.currentOpenedAccount,
             expandedAcctDetails: {
               ...state.currentOpenedAccount.expandedAcctDetails,
-              expenseDetails: [
-                ...(state.currentOpenedAccount.expandedAcctDetails.expenseDetails ?? []),
-                action.payload.newExpenseItem,
-              ],
               addExpenseItemPending: false,
-              addExpenseItemStatus: 'success'
+              addExpenseItemStatus: 'failure'
             },
           }
         };
-        case actions.ADD_EXPENSE_ITEM_FAILURE:
-          return {
-            ...state,
-            currentOpenedAccount: {
-              ...state.currentOpenedAccount,
-              expandedAcctDetails: {
-                ...state.currentOpenedAccount.expandedAcctDetails,
-                addExpenseItemPending: false,
-                addExpenseItemStatus: 'failure'
-              },
-            }
-          };
       case actions.ADD_EXPENSE_ITEM_PENDING:
         return {
           ...state,
@@ -238,6 +240,46 @@ export default function appReducer(state = INITIAL_STATE, action: any) {
             },
           }
         };
+        case actions.MAKE_PAYMENT_ITEM_SUCCESS:
+          return {
+            ...state,
+            currentOpenedAccount: {
+              ...state.currentOpenedAccount,
+              expandedAcctDetails: {
+                ...state.currentOpenedAccount.expandedAcctDetails,
+                paymentDetails: [
+                  ...(state.currentOpenedAccount.expandedAcctDetails.paymentDetails ?? []),
+                  action.payload.newPaymentItem,
+                ],
+                makePaymentItemPending: false,
+                makePaymentItemStatus: 'success'
+              },
+            }
+          };
+        case actions.MAKE_PAYMENT_ITEM_FAILURE:
+          return {
+            ...state,
+            currentOpenedAccount: {
+              ...state.currentOpenedAccount,
+              expandedAcctDetails: {
+                ...state.currentOpenedAccount.expandedAcctDetails,
+                makePaymentItemPending: false,
+                makePaymentItemStatus: 'failure'
+              },
+            }
+          };
+        case actions.MAKE_PAYMENT_ITEM_PENDING:
+          return {
+            ...state,
+            currentOpenedAccount: {
+              ...state.currentOpenedAccount,
+              expandedAcctDetails: {
+                ...state.currentOpenedAccount.expandedAcctDetails,
+                makePaymentItemPending: true,
+                makePaymentItemStatus: ''
+              },
+            }
+          };
     default:
       return state;
   }

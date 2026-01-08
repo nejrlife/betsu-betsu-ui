@@ -7,8 +7,10 @@ import "./Account.less";
 // import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import Typography from '@mui/material/Typography';
-import ReusableCard from "../../../components/ReusableCard";
-import AddExpenseItemForm from "../../../components/AddExpenseItemForm";
+import ExpenseItemCard from "./components/ExpenseItemCard";
+import PaymentItemCard from "./components/PaymentItemCard";
+import AddExpenseItemForm from "./components/AddExpenseItemForm";
+import MakePaymentItemForm from "./components/MakePaymentItemForm";
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
@@ -47,12 +49,18 @@ const Account = (props: any) => {
   
   const { accountId } = useParams();
   const [memberPool, setMemberPool] = useState<Member[]>([]);
-  const [isAddDialogOpen, setAddDialogOpen] = useState<boolean>(false);
+  const [isAddExpenseDialogOpen, setAddExpenseDialogOpen] = useState<boolean>(false);
+  const [isMakePaymentDialogOpen, setMakePaymentDialogOpen] = useState<boolean>(false);
   // const navigate = useNavigate();
 
   const handleAddExpenseItem = (event: any) => {
     event.preventDefault();
-    setAddDialogOpen(true);
+    setAddExpenseDialogOpen(true);
+  }
+
+  const handleMakePaymentItem = (event: any) => {
+    event.preventDefault();
+    setMakePaymentDialogOpen(true);
   }
 
   useEffect(() => {
@@ -75,9 +83,17 @@ const Account = (props: any) => {
   return (
     <>
       <AddExpenseItemForm
-        open={isAddDialogOpen}
+        open={isAddExpenseDialogOpen}
         handleClose={() => {
-          setAddDialogOpen(false)
+          setAddExpenseDialogOpen(false)
+        }}
+        memberPool={memberPool}
+        stExpandedAcctId={props.stExpandedAcctId}
+      />
+      <MakePaymentItemForm
+        open={isMakePaymentDialogOpen}
+        handleClose={() => {
+          setMakePaymentDialogOpen(false)
         }}
         memberPool={memberPool}
         stExpandedAcctId={props.stExpandedAcctId}
@@ -158,17 +174,17 @@ const Account = (props: any) => {
                 }}
               >
                 {props.stExpandedAccts?.expenseDetails?.length > 0 ?
-                  props.stExpandedAccts.expenseDetails?.map((acct: any) => (
-                    <ReusableCard
-                      key={acct._id}
-                      expenseName={acct.name}
+                  props.stExpandedAccts.expenseDetails?.map((expenseItem: any) => (
+                    <ExpenseItemCard
+                      key={expenseItem._id}
+                      expenseName={expenseItem.name}
                       loanerName={
-                        get(find(memberPool, { _id: acct.cashOutByMemberId }), "name")
+                        get(find(memberPool, { _id: expenseItem.cashOutByMemberId }), "name")
                       }
                       forName={
-                        get(find(memberPool, { _id: acct.forMemberId }), "name")
+                        get(find(memberPool, { _id: expenseItem.forMemberId }), "name")
                       }
-                      amount={acct.amount}
+                      amount={expenseItem.amount}
                     />
                 )) :
                 <div />
@@ -184,13 +200,24 @@ const Account = (props: any) => {
               <Typography
                 sx={{
                   mt: 1.5,
-                  mb: 1.5
+                  mb: 1.5,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '2rem'
                 }}
                 variant="h5"
                 component="h2">
                 Payments List
+                <Button
+                  onClick={handleMakePaymentItem}
+                  sx={{
+                    color: '#FFFFFF',
+                    backgroundColor: '#CC0000'
+                  }}
+                  variant="contained"
+                  color="primary">Add Payment</Button>
               </Typography>
-              {/* <Box
+              <Box
                 sx={{
                   pt: 1.5,
                   pb: 2.5,
@@ -201,23 +228,22 @@ const Account = (props: any) => {
                   overflowY: "auto",
                 }}
               >
-                {true ?
-                  (
-                    <ReusableCard
-                      key={'hasmilla123'}
-                      expenseName={'Paymnet 1 Paymnet 1 Paymnet 1 Paymnet 1 Paymnet 1 Paymnet 1 Paymnet 1'}
-                      loanerName={
-                        'miskuszi'
+                {props.stExpandedAccts?.paymentDetails?.length > 0 ?
+                  props.stExpandedAccts.paymentDetails?.map((paymentItem: any) => (
+                    <PaymentItemCard
+                      key={paymentItem._id}
+                      payorName={
+                        get(find(memberPool, { _id: paymentItem.paidByMemberId }), "name")
                       }
-                      forName={
-                        'mistuzse'
+                      payeeName={
+                        get(find(memberPool, { _id: paymentItem.paidToMemberId }), "name")
                       }
-                      amount={'1234'}
+                      amount={paymentItem.amount}
                     />
-                ) :
+                )) :
                 <div />
                 }
-              </Box> */}
+              </Box>
             </div>
           </div>
           </Item>

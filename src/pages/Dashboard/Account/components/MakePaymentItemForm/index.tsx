@@ -1,4 +1,4 @@
-import "./AddExpenseItemForm.less";
+import "./MakePaymentItemForm.less";
 import * as React from 'react';
 import { useState, useEffect, useRef } from "react";
 // import Box from '@mui/material/Box';
@@ -13,25 +13,22 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import DatePicker from "react-datepicker";
-import { ADD_EXPENSE_ITEM } from "../../sagas/constants";
+import { MAKE_PAYMENT_ITEM } from "../../../../../sagas/constants";
 import { connect } from "react-redux";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddExpenseItemForm = (props: any) => {
+const MakePaymentItemForm = (props: any) => {
 
   const {
     dispatch  
   } = props;
-
-  const [nameVal, setNameVal] = useState<string>('');
-  const [nameError, setNameError] = useState<string>('');
   
-  const [selectedLoaner, setSelectedLoaner] = useState<string>('');
-  const [loanerError, setLoanerError] = useState<string>('');
+  const [selectedPayor, setSelectedLoaner] = useState<string>('');
+  const [payorError, setLoanerError] = useState<string>('');
 
-  const [selectedLoanee, setSelectedLoanee] = useState<string>('');
-  const [loaneeError, setLoaneeError] = useState<string>('');
+  const [selectedPayee, setSelectedLoanee] = useState<string>('');
+  const [payeeError, setLoaneeError] = useState<string>('');
 
   const [amountVal, setAmountVal] = useState<string>("0.00");
   const [amountError, setAmountError] = useState<string>('');
@@ -57,31 +54,28 @@ const AddExpenseItemForm = (props: any) => {
     return isoDate
   }
 
-  const handleSelectLoaner = (event:any) => {
+  const handleSelectPayor = (event:any) => {
     event.preventDefault();
     setSelectedLoaner(event?.target?.value)
   };
 
-  const handleSelectLoanee = (event:any) => {
+  const handleSelectPayee = (event:any) => {
     event.preventDefault();
     setSelectedLoanee(event?.target?.value)
   };
 
   const handleSubmit = (event:any) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
     const reqst = {
       accountId: props.stExpandedAcctId,
-      name: nameVal,
-      cashOutByMemberId: selectedLoaner,
-      forMemberId: selectedLoanee,
+      paidByMemberId: selectedPayor,
+      paidToMemberId: selectedPayee,
       amount: Math.round(Number(amountVal) * 100) / 100,
       remarks: remarksVal,
       createdAt: transformDateToISO(dateVal)
     }
     dispatch({
-      type: ADD_EXPENSE_ITEM,
+      type: MAKE_PAYMENT_ITEM,
       payload: {
         ...reqst
       }
@@ -99,28 +93,20 @@ const AddExpenseItemForm = (props: any) => {
   const stPrevPending = usePrevious(props.stAddExpenseItemPending);
 
   useEffect(() => {
-    if (nameVal?.length === 0) {
-      setNameError("Name is empty");
-      return;
-    }
-    setNameError("");
-  }, [nameVal]);
-
-  useEffect(() => {
-    if (selectedLoaner?.length === 0) {
-      setLoanerError("Loaner is empty");
+    if (selectedPayor?.length === 0) {
+      setLoanerError("Payor is empty");
       return;
     }
     setLoanerError("");
-  }, [selectedLoaner]);
+  }, [selectedPayor]);
 
   useEffect(() => {
-    if (selectedLoanee?.length === 0) {
-      setLoaneeError("Loanee is empty");
+    if (selectedPayee?.length === 0) {
+      setLoaneeError("Payee is empty");
       return;
     }
     setLoaneeError("");
-  }, [selectedLoanee]);
+  }, [selectedPayee]);
 
   useEffect(() => {
     if ( amountVal?.length === 0 || Number(amountVal) === 0) {
@@ -140,18 +126,18 @@ const AddExpenseItemForm = (props: any) => {
 
   useEffect(() => {
     const oldVal = stPrevPending;
-    const newVal = props.stAddExpenseItemPending;
+    const newVal = props.stMakePaymentItemPending;
     if (oldVal === true && newVal === false) {
       props.handleClose();
     }
 
     
-  }, [props.stAddExpenseItemPending]);
+  }, [props.stMakePaymentItemPending]);
 
   return (
     <React.Fragment>
       <Dialog open={props.open} onClose={props.handleClose}>
-        <DialogTitle>Add Expense Item</DialogTitle>
+        <DialogTitle>Add Payment Item</DialogTitle>
         <DialogContent
           sx={{
             minWidth: '500px'
@@ -163,36 +149,21 @@ const AddExpenseItemForm = (props: any) => {
             className="globalFlexColumn"
             onSubmit={handleSubmit}
             id="subscription-form">
-            <TextField
-              error={nameError?.length > 0}
-              autoFocus
-              required
-              margin="dense"
-              id="nameVal"
-              name="nameVal"
-              label="Expense Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={nameVal}
-              onChange={(e) => setNameVal(e.target.value)}
-              helperText={nameError}
-            />
             <div
               className="globalFlexRow"
               style={{
                 alignItems: 'center',
               }}>
-              <InputLabel id="loaner-select-label">Loaner</InputLabel>
+              <InputLabel id="payor-select-label">Payor</InputLabel>
               <Select
-                error={loanerError?.length > 0}
+                error={payorError?.length > 0}
                 sx={{
                   minWidth: '300px'
                 }}
-                labelId="loaner-select-label"
-                id="loaner-simple-select"
-                value={selectedLoaner}
-                onChange={handleSelectLoaner}
+                labelId="payor-select-label"
+                id="payor-simple-select"
+                value={selectedPayor}
+                onChange={handleSelectPayor}
               >
                 {props.memberPool?.length > 0 ?
                     props.memberPool?.map((member: any) => (
@@ -207,16 +178,16 @@ const AddExpenseItemForm = (props: any) => {
               style={{
                 alignItems: 'center',
               }}>
-              <InputLabel id="loanee-select-label">Loanee</InputLabel>
+              <InputLabel id="payee-select-label">Payee</InputLabel>
               <Select
-                error={loaneeError?.length > 0}
+                error={payeeError?.length > 0}
                 sx={{
                   minWidth: '300px'
                 }}
-                labelId="loanee-select-label"
-                id="loanee-simple-select"
-                value={selectedLoanee}
-                onChange={handleSelectLoanee}
+                labelId="payee-select-label"
+                id="payee-simple-select"
+                value={selectedPayee}
+                onChange={handleSelectPayee}
               >
                 {props.memberPool?.length > 0 ?
                     props.memberPool?.map((member: any) => (
@@ -267,10 +238,10 @@ const AddExpenseItemForm = (props: any) => {
         <DialogActions>
           <Button onClick={props.handleClose}>Cancel</Button>
           <Button
-            disabled={nameError?.length > 0 || loanerError.length > 0 || loaneeError.length > 0 || amountError.length > 0 || dateError.length > 0}
+            disabled={payorError.length > 0 || payeeError.length > 0 || amountError.length > 0 || dateError.length > 0}
             type="submit"
             form="subscription-form">
-            Add Expense Item
+            Add Payment Item
           </Button>
         </DialogActions>
       </Dialog>
@@ -279,8 +250,8 @@ const AddExpenseItemForm = (props: any) => {
 }
 
 const mapStateToProps = (state:any) => ({
-  stAddExpenseItemPending: state.currentOpenedAccount.expandedAcctDetails.addExpenseItemPending,
-  stAddExpenseItemStatus: state.currentOpenedAccount.expandedAcctDetails.addExpenseItemStatus,
+  stMakePaymentItemPending: state.currentOpenedAccount.expandedAcctDetails.makePaymentItemPending,
+  stMakePaymentItemStatus: state.currentOpenedAccount.expandedAcctDetails.makePaymentItemStatus,
 });
 
-export default connect(mapStateToProps, null)(AddExpenseItemForm);
+export default connect(mapStateToProps, null)(MakePaymentItemForm);
