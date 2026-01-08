@@ -76,7 +76,7 @@ const Tracker = (props: any) => {
               {openAccounts?.map((item, i) => (
                 <Accordion
                   key={'panel-' + item._id}
-                  expanded={expandedPanel === 'panel-' + item._id}
+                  expanded={true}
                   onChange={handleChange('panel-' + item._id)}
                 >
                 <AccordionSummary
