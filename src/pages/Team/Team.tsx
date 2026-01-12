@@ -5,28 +5,16 @@ const Team = () => {
   const data = {
     memberList :[
       {
-        name:"Beng Tiong Tang",
+        name:"Arth",
       },
       {
-        name:"Niraj Kumar Jha",
+        name:"Braw",
       },
       {
-        name:"Siddharth Pandey",
+        name:"Craw",
       },
       {
-        name:"Jatin Suri",
-      },
-      {
-        name:"Parasmani Jain",
-      },
-      {
-        name:"Saurabh Nilegaonkar",
-      },
-      {
-        name:"Bhawana Sharma",
-      },
-      {
-        name:"Vimlesh Singh",
+        name:"Marms",
       }
     ]
   };

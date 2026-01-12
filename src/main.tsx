@@ -8,6 +8,12 @@ import configureStore from "../src/configureStore.js";
 
 export const store = configureStore();
 
+const bgUrl = import.meta.env.VITE_BG_URL;
+document.documentElement.style.setProperty(
+  "--app-bg",
+  `url(${bgUrl ? bgUrl : "../bg.jpg"})`
+);
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>

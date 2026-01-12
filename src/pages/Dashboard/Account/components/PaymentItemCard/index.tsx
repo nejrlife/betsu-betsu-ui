@@ -46,12 +46,12 @@ const PaymentItemCard = (props: any) => {
           "&:last-child": { pb: 0 },
         }}>
         <Grid container spacing={2}>
-          <Grid xs={8}>
+          <Grid className="gridItem" item xs={8}>
             <Typography variant="body1" sx={{ mb: 1.5 }}>
               { props.payorName } → { props.payeeName }
             </Typography>
           </Grid>
-          <Grid xs={4}>
+          <Grid className="gridItem" item xs={4}>
             <Typography variant="body1" sx={{ mb: 1.5 }}>
                 { props.amount }
             </Typography>

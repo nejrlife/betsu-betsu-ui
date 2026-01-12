@@ -196,7 +196,7 @@ const AddExpenseItemForm = (props: any) => {
               >
                 {props.memberPool?.length > 0 ?
                     props.memberPool?.map((member: any) => (
-                      <MenuItem value={member._id}>{member.name}</MenuItem>
+                      <MenuItem key={member._id} value={member._id}>{member.name}</MenuItem>
                   )) :
                   <div />
                   }
@@ -220,7 +220,7 @@ const AddExpenseItemForm = (props: any) => {
               >
                 {props.memberPool?.length > 0 ?
                     props.memberPool?.map((member: any) => (
-                      <MenuItem value={member._id}>{member.name}</MenuItem>
+                      <MenuItem key={member._id} value={member._id}>{member.name}</MenuItem>
                   )) :
                   <div />
                   }

@@ -25,7 +25,7 @@ a:hover {
 
 body {
   margin: 0;
-  background-image: url(../bg.jpg); /* Replace 'your-image.jpg' with the path to your image */
+  background-image: var(--app-bg); /* Replace 'your-image.jpg' with the path to your image */
   background-repeat: no-repeat;
   background-size: cover; /* Adjust as needed (cover, contain, etc.) */
   background-attachment: fixed;

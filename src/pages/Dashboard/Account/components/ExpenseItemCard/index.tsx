@@ -47,17 +47,21 @@ const ExpenseItemCard = (props: any) => {
         }}>
         {/* <Box sx={{ flexGrow: 1 }}> */}
         <Grid container spacing={2}>
-          <Grid xs={12}>
+          <Grid
+            className="gridItem"
+            item
+            xs={12}
+          >
             <Typography variant="body1" sx={{ mt: 1.5, mb: 1.5 }}>{ props.expenseName }</Typography>
           </Grid>
           {/* <Grid xs={}>
           </Grid> */}
-          <Grid xs={8}>
+          <Grid className="gridItem" item xs={8}>
             <Typography variant="body1" sx={{ mb: 1.5 }}>
               { props.loanerName } → { props.forName }
             </Typography>
           </Grid>
-          <Grid xs={4}>
+          <Grid className="gridItem" item xs={4}>
             <Typography variant="body1" sx={{ mb: 1.5 }}>
                 { props.amount }
             </Typography>

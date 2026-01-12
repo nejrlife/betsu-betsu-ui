@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 // import Skeleton from '@mui/material/Skeleton';
 import "./Account.less";
@@ -18,8 +18,9 @@ import Divider from '@mui/material/Divider';
 import { useParams } from "react-router-dom";
 import { RETRIEVE_EXPANDED_ACCOUNT_DETAILS } from "../../../sagas/constants";
 import { ExpenseItem, Member } from "../../../types"
-import { find, get } from "lodash";
+import { find, get, mapValues, groupBy, sumBy, omit, filter } from "lodash";
 import { Button } from "@mui/material";
+import SummaryContent from "./components/SummaryContent";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -79,6 +80,74 @@ const Account = (props: any) => {
       });
     }
   },[accountId, props.stExpandedAcctId]);
+
+  const membersTotalLoanMap = useMemo(() => mapValues(
+    groupBy(props.stExpandedAccts?.expenseDetails, "forMemberId"),
+    expenseItem => sumBy(expenseItem, "amount")
+  ), [props.stExpandedAccts?.expenseDetails]);
+
+  const loaneesMapToPayToEachLoaner = useMemo(() => mapValues(
+    groupBy(props.stExpandedAccts?.expenseDetails, "forMemberId"),
+    borrowerItems =>
+      mapValues(
+        groupBy(borrowerItems, "cashOutByMemberId"),
+        lenderItems => sumBy(lenderItems, "amount")
+      )
+  ), [props.stExpandedAccts?.expenseDetails]);
+
+  const loaneesMapRemainingToPay = useMemo(() => {
+    const ret = mapValues(loaneesMapToPayToEachLoaner, (toPayDetes: any, loaneeId: any) => {
+      console.log("loaneesMapRemainingToPay - ret");
+      console.log(loaneeId);
+      console.log(toPayDetes);
+      const remBal = mapValues(omit(toPayDetes, loaneeId), (remainingBalanceToLoaner: any, loanerId: any) => {
+        console.log("loaneesMapRemainingToPay - remBal");
+        console.log(loanerId);
+        console.log(remainingBalanceToLoaner);
+        const loanerBalanceToLoanee = get(get(loaneesMapToPayToEachLoaner, loanerId), loaneeId);
+        console.log("loaneesMapRemainingToPay - loanerBalanceToLoanee");
+        console.log(loanerBalanceToLoanee);
+        console.log("loaneesMapRemainingToPay - loanerBalanceToLoanee");
+        
+        const adjustedBalanceOfLoanee = remainingBalanceToLoaner - loanerBalanceToLoanee;
+        console.log(adjustedBalanceOfLoanee);
+        const totalPaymentsOfLoaneeToLoaner = sumBy(
+          filter(props.stExpandedAccts?.paymentDetails, p =>
+            p.paidByMemberId === loaneeId &&
+            p.paidToMemberId === loanerId
+          ),
+          "amount"
+        );
+        console.log("loaneesMapRemainingToPay - totally");
+        console.log(totalPaymentsOfLoaneeToLoaner);
+        return (adjustedBalanceOfLoanee < 0 ? 0 : adjustedBalanceOfLoanee) - totalPaymentsOfLoaneeToLoaner;
+      });
+      return remBal;
+    });
+    console.log('loaneesMapRemainingToPay - ret 2');
+    console.log(ret);
+    return ret;
+    }, [loaneesMapToPayToEachLoaner, props.stExpandedAccts?.paymentDetails]);
+
+  useEffect(() => {
+    console.log("Totals changed");
+    console.log(membersTotalLoanMap);
+  },[membersTotalLoanMap])
+
+  useEffect(() => {
+    console.log("Loanee map to pay to loaner Totals changed");
+    console.log(loaneesMapToPayToEachLoaner);
+  },[loaneesMapToPayToEachLoaner])
+
+  useEffect(() => {
+    console.log("Payment details");
+    console.log(props.stExpandedAccts?.paymentDetails);
+  },[props.stExpandedAccts?.paymentDetails])
+
+  useEffect(() => {
+    console.log("Remaining Balance details");
+    console.log(loaneesMapRemainingToPay);
+  },[loaneesMapRemainingToPay])
   
   return (
     <>
@@ -107,15 +176,27 @@ const Account = (props: any) => {
           }}
         >
           <Item key={'expenseTitle'} elevation={3}>
-            <Typography
-              sx={{
-                mt: 1.5,
-                mb: 1.5
-              }}
-              variant="h5"
-              component="h2">
-              Account Name
-            </Typography>
+            <div className="globalFlexRow">
+              <Typography
+                sx={{
+                  mt: 1.5,
+                  mb: 1.5
+                }}
+                variant="h5"
+                component="h2">
+                Account Name
+              </Typography>
+              <Typography
+                sx={{
+                  mt: 1.5,
+                  mb: 1.5,
+                  color: '#5B2D8B'
+                }}
+                variant="h5"
+                component="h2">
+                { props.stExpandedAccts?.name }
+              </Typography>
+            </div>
           </Item>
           <Item key={'expenseSummary'} elevation={3}>
             <Typography
@@ -127,6 +208,11 @@ const Account = (props: any) => {
               component="h2">
               Summary
             </Typography>
+            <SummaryContent
+              loaneesMapRemainingToPay={loaneesMapRemainingToPay}
+              membersTotalLoanMap={membersTotalLoanMap}
+              loaneesMapToPayToEachLoaner={loaneesMapToPayToEachLoaner}
+            />
           </Item>
           <Item key={'expenseList'} elevation={3}>
           <div
