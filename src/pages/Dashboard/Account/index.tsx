@@ -21,6 +21,7 @@ import { ExpenseItem, Member } from "../../../types"
 import { find, get, mapValues, groupBy, sumBy, omit, filter } from "lodash";
 import { Button } from "@mui/material";
 import SummaryContent from "./components/SummaryContent";
+import { setExpandedAccount } from "../../../actions/setExpandedAccountId";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -71,7 +72,16 @@ const Account = (props: any) => {
   },[props.stMembersDetails]);
 
   useEffect(() => {
-    if (accountId && (!props.stExpandedAcctId)) {
+    if (accountId && props.stExpandedAcctId !== accountId) {
+      dispatch(setExpandedAccount(accountId));
+    }
+  },[accountId]);
+
+  useEffect(() => {
+    console.log("props - stExpandedAcctId");
+    console.log(props.stExpandedAcctId);
+    console.log(props.stExpandedAccts[props.stExpandedAcctId]);
+    if (!props.stExpandedAccts[props.stExpandedAcctId]) {
       dispatch({
         type: RETRIEVE_EXPANDED_ACCOUNT_DETAILS,
         payload: {
@@ -79,21 +89,21 @@ const Account = (props: any) => {
         }
       });
     }
-  },[accountId, props.stExpandedAcctId]);
+  },[props.stExpandedAcctId]);
 
   const membersTotalLoanMap = useMemo(() => mapValues(
-    groupBy(props.stExpandedAccts?.expenseDetails, "forMemberId"),
+    groupBy(props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails, "forMemberId"),
     expenseItem => sumBy(expenseItem, "amount")
-  ), [props.stExpandedAccts?.expenseDetails]);
+  ), [props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails]);
 
   const loaneesMapToPayToEachLoaner = useMemo(() => mapValues(
-    groupBy(props.stExpandedAccts?.expenseDetails, "forMemberId"),
+    groupBy(props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails, "forMemberId"),
     borrowerItems =>
       mapValues(
         groupBy(borrowerItems, "cashOutByMemberId"),
         lenderItems => sumBy(lenderItems, "amount")
       )
-  ), [props.stExpandedAccts?.expenseDetails]);
+  ), [props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails]);
 
   const loaneesMapRemainingToPay = useMemo(() => {
     const ret = mapValues(loaneesMapToPayToEachLoaner, (toPayDetes: any, loaneeId: any) => {
@@ -112,7 +122,7 @@ const Account = (props: any) => {
         const adjustedBalanceOfLoanee = remainingBalanceToLoaner - loanerBalanceToLoanee;
         console.log(adjustedBalanceOfLoanee);
         const totalPaymentsOfLoaneeToLoaner = sumBy(
-          filter(props.stExpandedAccts?.paymentDetails, p =>
+          filter(props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails, p =>
             p.paidByMemberId === loaneeId &&
             p.paidToMemberId === loanerId
           ),
@@ -127,7 +137,7 @@ const Account = (props: any) => {
     console.log('loaneesMapRemainingToPay - ret 2');
     console.log(ret);
     return ret;
-    }, [loaneesMapToPayToEachLoaner, props.stExpandedAccts?.paymentDetails]);
+    }, [loaneesMapToPayToEachLoaner, props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails]);
 
   useEffect(() => {
     console.log("Totals changed");
@@ -141,8 +151,8 @@ const Account = (props: any) => {
 
   useEffect(() => {
     console.log("Payment details");
-    console.log(props.stExpandedAccts?.paymentDetails);
-  },[props.stExpandedAccts?.paymentDetails])
+    console.log(props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails);
+  },[props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails])
 
   useEffect(() => {
     console.log("Remaining Balance details");
@@ -194,7 +204,7 @@ const Account = (props: any) => {
                 }}
                 variant="h5"
                 component="h2">
-                { props.stExpandedAccts?.name }
+                { props.stExpandedAccts[props.stExpandedAcctId]?.name }
               </Typography>
             </div>
           </Item>
@@ -259,8 +269,8 @@ const Account = (props: any) => {
                   overflowY: "auto",
                 }}
               >
-                {props.stExpandedAccts?.expenseDetails?.length > 0 ?
-                  props.stExpandedAccts.expenseDetails?.map((expenseItem: any) => (
+                {props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails?.length > 0 ?
+                  props.stExpandedAccts[props.stExpandedAcctId].expenseDetails?.map((expenseItem: any) => (
                     <ExpenseItemCard
                       key={expenseItem._id}
                       expenseName={expenseItem.name}
@@ -314,8 +324,8 @@ const Account = (props: any) => {
                   overflowY: "auto",
                 }}
               >
-                {props.stExpandedAccts?.paymentDetails?.length > 0 ?
-                  props.stExpandedAccts.paymentDetails?.map((paymentItem: any) => (
+                {props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails?.length > 0 ?
+                  props.stExpandedAccts[props.stExpandedAcctId].paymentDetails?.map((paymentItem: any) => (
                     <PaymentItemCard
                       key={paymentItem._id}
                       payorName={
@@ -342,7 +352,7 @@ const Account = (props: any) => {
 const mapStateToProps = (state:any) => ({
   stExpandedAccts: state.currentOpenedAccount.expandedAcctDetails,
   stExpandedAcctId: state.currentOpenedAccount.expandedAcctId,
-  stMembersDetails: state.membersDetails
+  stMembersDetails: state.membersDetails,
 });
 
 export default connect(mapStateToProps, null)(Account);

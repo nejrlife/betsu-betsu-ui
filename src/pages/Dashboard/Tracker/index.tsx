@@ -10,15 +10,19 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { AccountDetail } from "../types";
-import { get, find, partition } from 'lodash';
+import { get, find, partition, first } from 'lodash';
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
+import AddIcon from '@mui/icons-material/Add';
+import { IconButton } from "@mui/material";
+import AddAccountForm from "./components/AddAccountForm";
 
 const Tracker = (props: any) => {
 
   const [expandedPanel, setExpandedPanel] = useState<string | false>(false);
   const [openedTab, setOpenedTab] = useState<number>(1);
 
+  const [addAcctDialogOpened, setAddAcctDialogOpened] = useState<boolean>(false);
   const [openAccounts, setOpenAccounts] = useState<AccountDetail[]>([]);
   const [closedAccounts, setClosedAccounts] = useState<AccountDetail[]>([]);
 
@@ -34,25 +38,25 @@ const Tracker = (props: any) => {
     setOpenedTab(newValue);
   };
 
+  const handleAddAccount = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    setAddAcctDialogOpened(!addAcctDialogOpened);
+  };
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (props.memberId && props.retrieveAccountDetailsByMember?.length > 0) {
-      setAccountsData(props.retrieveAccountDetailsByMember);
+    if (props.stAuthMemberId && props.stUserAcctsAccounts?.length > 0) {
+      setAccountsData(props.stUserAcctsAccounts);
     }
-  },[props.memberId, props.retrieveAccountDetailsByMember]);
-
-  useEffect(() => {
-    console.log("it loaded");
-    setUserBalance("12");
-  }, []);
+  },[props.stAuthMemberId, props.stUserAcctsAccounts]);
 
   useEffect(() => {
     if (accountsData?.length > 0) {
       const [open, closed] = partition(accountsData, { isAccountOpen: true });
       setOpenAccounts(open);
       setClosedAccounts(closed);
-      const prioritizedId = get(find(accountsData, { isAccountPriority: true }), '_id');
+      const prioritizedId = get(first(accountsData), '_id');
       if (prioritizedId) {
         setExpandedPanel('panel-' + prioritizedId);
       }
@@ -61,8 +65,29 @@ const Tracker = (props: any) => {
   
   return (
     <div className='accountBalanceTable'>
-      {userBalance?.length > 0 ?
-        (<h3>Account Tracker</h3>) :
+      <AddAccountForm 
+        open={addAcctDialogOpened}
+        handleClose={() => {
+          setAddAcctDialogOpened(false)
+        }}
+      />
+      {true ?
+        (<div
+          style={{
+            alignItems: 'center'
+          }}
+          className="globalFlexRow">
+          <h3>Account Tracker</h3>
+          <IconButton
+            sx={{
+              maxHeight: 40
+            }}
+            onClick={handleAddAccount}
+            aria-label="addAcc"
+          >
+            <AddIcon />
+          </IconButton>
+        </div>) :
         (<Skeleton variant='text' sx={{ fontSize: '18px', marginBlockStart: '1em', marginBlockEnd: '1em' }} width={200} />)
       }
       <div>
@@ -76,7 +101,7 @@ const Tracker = (props: any) => {
               {openAccounts?.map((item, i) => (
                 <Accordion
                   key={'panel-' + item._id}
-                  expanded={true}
+                  expanded={expandedPanel === 'panel-' + item._id}
                   onChange={handleChange('panel-' + item._id)}
                 >
                 <AccordionSummary
@@ -86,7 +111,7 @@ const Tracker = (props: any) => {
                   <Typography component="span">{item.name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <h4>The account was opened on {item.dateOpened}</h4>
+                  <h4>The account was opened on {item.createdAt}</h4>
                 </AccordionDetails>
                 <AccordionActions>
                   <Button
@@ -94,7 +119,7 @@ const Tracker = (props: any) => {
                       navigate('/home/dashboard/account/' + item._id);
                     }}
                   >
-                    Expand Account
+                    View Account
                   </Button>
                 </AccordionActions>
               </Accordion>
@@ -116,10 +141,10 @@ const Tracker = (props: any) => {
                     <Typography component="span">{item.name}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <h4>The account was closed on {item.dateOpened}</h4>
+                    <h4>The account was closed on {item.createdAt}</h4>
                   </AccordionDetails>
                   <AccordionActions>
-                    <Button>Expand Account</Button>
+                    <Button>View Account</Button>
                   </AccordionActions>
                 </Accordion>
                 ))}
@@ -134,8 +159,8 @@ const Tracker = (props: any) => {
 };
 
 const mapStateToProps = (state:any) => ({
-  memberId: state.authenticateUser.memberId,
-  retrieveAccountDetailsByMember: state.userAccounts.accounts,
+  stAuthMemberId: state.authenticateUser.memberId,
+  stUserAcctsAccounts: state.userAccounts.accounts,
 });
 
 export default connect(mapStateToProps, null)(Tracker);

@@ -279,8 +279,8 @@ const AddExpenseItemForm = (props: any) => {
 }
 
 const mapStateToProps = (state:any) => ({
-  stAddExpenseItemPending: state.currentOpenedAccount.expandedAcctDetails.addExpenseItemPending,
-  stAddExpenseItemStatus: state.currentOpenedAccount.expandedAcctDetails.addExpenseItemStatus,
+  stAddExpenseItemPending: state.currentOpenedAccount.addExpenseItemPending,
+  stAddExpenseItemStatus: state.currentOpenedAccount.addExpenseItemStatus,
 });
 
 export default connect(mapStateToProps, null)(AddExpenseItemForm);

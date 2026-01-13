@@ -90,7 +90,7 @@ const MakePaymentItemForm = (props: any) => {
     return ref.current;
   }
 
-  const stPrevPending = usePrevious(props.stAddExpenseItemPending);
+  const stPrevPending = usePrevious(props.stMakePaymentItemPending);
 
   useEffect(() => {
     if (selectedPayor?.length === 0) {
@@ -250,8 +250,8 @@ const MakePaymentItemForm = (props: any) => {
 }
 
 const mapStateToProps = (state:any) => ({
-  stMakePaymentItemPending: state.currentOpenedAccount.expandedAcctDetails.makePaymentItemPending,
-  stMakePaymentItemStatus: state.currentOpenedAccount.expandedAcctDetails.makePaymentItemStatus,
+  stMakePaymentItemPending: state.currentOpenedAccount.makePaymentItemPending,
+  stMakePaymentItemStatus: state.currentOpenedAccount.makePaymentItemStatus,
 });
 
 export default connect(mapStateToProps, null)(MakePaymentItemForm);

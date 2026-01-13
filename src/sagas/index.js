@@ -7,6 +7,7 @@ import { watchRetrieveExpandedAccount } from "./watchRetrieveExpandedAccount";
 import { watchRetrieveMembersDetails } from "./watchRetrieveMembersDetails";
 import { watchAddExpenseItem } from "./watchAddExpenseItem";
 import { watchMakePaymentItem } from "./watchMakePaymentItem";
+import { watchAddAccount } from "./watchAddAccount";
 
 function* dataSaga() {
   yield takeLeading(actions.LOG_IN, watchLogIn);
@@ -16,6 +17,7 @@ function* dataSaga() {
   yield takeLeading (actions.RETRIEVE_EXPANDED_ACCOUNT_DETAILS, watchRetrieveExpandedAccount);
   yield takeLeading (actions.ADD_EXPENSE_ITEM, watchAddExpenseItem);
   yield takeLeading (actions.MAKE_PAYMENT_ITEM, watchMakePaymentItem);
+  yield takeLeading (actions.ADD_ACCOUNT, watchAddAccount);
 }
 
 export default dataSaga;

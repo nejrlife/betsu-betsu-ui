@@ -30,14 +30,20 @@ export interface Member {
 export interface UserAccounts {
   accounts: Account[] | null,
   retrieveAccountsError: string,
-  retrieveAccountsPending: boolean
+  retrieveAccountsPending: boolean,
+  addAccountStatus: string,
+  addAccountPending: boolean
 }
 
 export interface CurrentOpenedAccount {
   expandedAcctId: string,
   expandedAcctError: string,
   expandedAcctPending: boolean,
-  expandedAcctDetails: ExpandedAccountDetails;
+  expandedAcctDetails:  Record<string, ExpandedAccountDetails>;
+  addExpenseItemPending: boolean;
+  addExpenseItemStatus: string;
+  makePaymentItemPending: boolean;
+  makePaymentItemStatus: string;
 }
 
 export interface  Account {
@@ -47,15 +53,11 @@ export interface  Account {
 
 export interface ExpandedAccountDetails {
   name: string;
-  dateOpened: string;
+  createdAt: string;
   isAccountOpen: boolean;
-  isAccountPriority: boolean;
+  // isAccountPriority: boolean;
   expenseDetails: ExpenseItem[] | null;
   paymentDetails: Payment[] | null;
-  addExpenseItemPending: boolean;
-  addExpenseItemStatus: string;
-  makePaymentItemPending: boolean;
-  makePaymentItemStatus: string;
 }
 
 export interface ExpenseItem {
