@@ -9,21 +9,12 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 const ExpenseItemCard = (props: any) => {
-
-  // const bull = (
-  //   <Box
-  //     component="span"
-  //     sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  //   >
-  //     •
-  //   </Box>
-  // );
   return (
     <Card
       variant="outlined"
       sx={{
         minHeight: "fit-content",
-        maxWidth: 500,
+        minWidth: "fit-content",
         borderRadius: 3,
         borderColor: "rgba(44, 49, 87, 0.35)",
         bgcolor: "rgba(255,255,255,0.96)",
@@ -50,19 +41,19 @@ const ExpenseItemCard = (props: any) => {
           <Grid
             className="gridItem"
             item
-            xs={12}
+            xs={7}
           >
-            <Typography variant="body1" sx={{ mt: 1.5, mb: 1.5 }}>{ props.expenseName }</Typography>
+            <Typography variant="body1" sx={{ mb: 1.5 }}>{ props.expenseName }</Typography>
           </Grid>
           {/* <Grid xs={}>
           </Grid> */}
-          <Grid className="gridItem" item xs={8}>
+          <Grid className="gridItem" item xs={4}>
             <Typography variant="body1" sx={{ mb: 1.5 }}>
               { props.loanerName } → { props.forName }
             </Typography>
           </Grid>
-          <Grid className="gridItem" item xs={4}>
-            <Typography variant="body1" sx={{ mb: 1.5 }}>
+          <Grid className="gridItem" item xs={1}>
+            <Typography variant="body1" sx={{ mb: 1.5, color: '#CC9900'}}>
                 { props.amount }
             </Typography>
           </Grid>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Skeleton from '@mui/material/Skeleton';
 import "./Tracker.less";
 import Tabs from '@mui/material/Tabs';
@@ -26,7 +26,6 @@ const Tracker = (props: any) => {
   const [openAccounts, setOpenAccounts] = useState<AccountDetail[]>([]);
   const [closedAccounts, setClosedAccounts] = useState<AccountDetail[]>([]);
 
-  const [userBalance, setUserBalance] = useState<string>('');
   const [accountsData, setAccountsData] = useState<AccountDetail[]>([]);
 
   const handleChange =
@@ -42,6 +41,16 @@ const Tracker = (props: any) => {
     event.preventDefault();
     setAddAcctDialogOpened(!addAcctDialogOpened);
   };
+
+  const usePrevious = (value:any) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
+
+  const prevOpenedTab = usePrevious(openedTab);
 
   const navigate = useNavigate();
 
@@ -62,6 +71,27 @@ const Tracker = (props: any) => {
       }
     }
   }, [accountsData]);
+
+  useEffect(() => {
+    if (accountsData?.length > 0) {
+      const [open, closed] = partition(accountsData, { isAccountOpen: true });
+      setOpenAccounts(open);
+      setClosedAccounts(closed);
+      const prioritizedId = get(first(accountsData), '_id');
+      if (prioritizedId) {
+        setExpandedPanel('panel-' + prioritizedId);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (openedTab !== prevOpenedTab) {
+      const prioritizedId = get(first(openedTab === 1 ? openAccounts: closedAccounts), '_id');
+      if (prioritizedId) {
+        setExpandedPanel('panel-' + prioritizedId);
+      }
+    }
+  }, [openedTab, prevOpenedTab]);
   
   return (
     <div className='accountBalanceTable'>
@@ -91,7 +121,7 @@ const Tracker = (props: any) => {
         (<Skeleton variant='text' sx={{ fontSize: '18px', marginBlockStart: '1em', marginBlockEnd: '1em' }} width={200} />)
       }
       <div>
-        <Tabs value={openedTab} onChange={handleTabChange} aria-label="basic tabs example">
+        <Tabs value={openedTab} onChange={handleTabChange} aria-label="Tracker tabs">
           <Tab label="Closed" />
           <Tab label="Open" />
         </Tabs>
@@ -144,7 +174,13 @@ const Tracker = (props: any) => {
                     <h4>The account was closed on {item.createdAt}</h4>
                   </AccordionDetails>
                   <AccordionActions>
-                    <Button>View Account</Button>
+                    <Button
+                      onClick={() => {
+                        navigate('/home/dashboard/account/' + item._id);
+                      }}
+                    >
+                      View Account
+                    </Button>
                   </AccordionActions>
                 </Accordion>
                 ))}

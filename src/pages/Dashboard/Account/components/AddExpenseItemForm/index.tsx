@@ -183,7 +183,7 @@ const AddExpenseItemForm = (props: any) => {
               style={{
                 alignItems: 'center',
               }}>
-              <InputLabel id="loaner-select-label">Loaner</InputLabel>
+              <InputLabel id="loaner-select-label">Lender</InputLabel>
               <Select
                 error={loanerError?.length > 0}
                 sx={{
@@ -207,7 +207,7 @@ const AddExpenseItemForm = (props: any) => {
               style={{
                 alignItems: 'center',
               }}>
-              <InputLabel id="loanee-select-label">Loanee</InputLabel>
+              <InputLabel id="loanee-select-label">Lendee</InputLabel>
               <Select
                 error={loaneeError?.length > 0}
                 sx={{

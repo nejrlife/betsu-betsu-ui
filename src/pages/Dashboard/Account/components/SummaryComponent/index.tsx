@@ -1,4 +1,4 @@
-import "./SummaryContent.less";
+import "./SummaryComponent.less";
 import { useMemo, useEffect, useState } from "react";
 // import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,7 +18,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-const SummaryContent = (props: any) => {
+const SummaryComponent = (props: any) => {
   
   const [tableOpened, setTableOpened] = useState<boolean>(false);
 
@@ -42,14 +42,11 @@ const SummaryContent = (props: any) => {
     console.log(props?.loaneesMapToPayToEachLoaner);
     console.log(props?.stMembersDetails?.membersPool);
     forEach(sortedMembers, (memberDete: any) => {
-      console.log("loaneesMapToPayDetails - Member Dete");
-      console.log(memberDete);
       let tableRowObj = {};
       set(tableRowObj, "memberId", memberDete._id);
       set(tableRowObj, "memberName", memberDete.name);
       set(tableRowObj, "memberTotalLoaned", get(props?.membersTotalLoanMap, memberDete._id));
       // const membersPoolOmitted = filter(sortedMembers, m => m._id !== memberDete._id);
-      console.log(tableRowObj);
       forEach(sortedMembers, (loanerDete: any) => {
         set(tableRowObj, [loanerDete._id], get(
           props?.loaneesMapToPayToEachLoaner?.[memberDete._id],
@@ -107,7 +104,7 @@ const SummaryContent = (props: any) => {
                         >
                         <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "payTo"} sx={{ color: 'text.secondary', mb: 1.5, mt: 2.5 }}>Pay to</Typography>
                         <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "namey"} variant="h6" sx={{ mb: 1.5, mt: 2.5 }}>{ get(find(props.stMembersDetails?.membersPool, { _id: loanerAndBalanceDetes?.loanerId }), "name") }</Typography>
-                        {loanerAndBalanceDetes?.remainingBalance > 0 ?
+                        {loanerAndBalanceDetes?.remainingBalance !== 0 ?
                           (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "remBal"} variant="h5" sx={{ color: '#5B2D8B', mb: 1.5, mt: 2.5 }}>{ loanerAndBalanceDetes?.remainingBalance }</Typography>) :
                           (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "paid"} variant="h5" sx={{ color: '#3A7F5A', mb: 1.5, mt: 2.5 }}>PAID</Typography>)
                         }
@@ -132,7 +129,7 @@ const SummaryContent = (props: any) => {
                 <TableCell />
                 <TableCell align="right">Total money expended</TableCell>
                 {sortedMembers && sortedMembers.map((member: any) =>
-                  <TableCell key={member._id + "header"} align="right">{member.name}</TableCell>)
+                  <TableCell key={member._id + "header"} align="right">{ 'From ' + member.name}</TableCell>)
                 }
               </TableRow>
             </TableHead>
@@ -165,4 +162,4 @@ const mapStateToProps = (state:any) => ({
   stMembersDetails: state.membersDetails
 });
 
-export default connect(mapStateToProps, null)(SummaryContent);
+export default connect(mapStateToProps, null)(SummaryComponent);

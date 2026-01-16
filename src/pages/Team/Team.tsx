@@ -15,7 +15,7 @@ const Team = () => {
       },
       {
         name:"Marms",
-      }
+      },
     ]
   };
 

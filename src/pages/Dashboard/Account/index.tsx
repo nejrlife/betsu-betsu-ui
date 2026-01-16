@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import "./Account.less";
 // import { AccountDetail } from "../types";
 // import { get, find, partition } from 'lodash';
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import Typography from '@mui/material/Typography';
 import ExpenseItemCard from "./components/ExpenseItemCard";
@@ -18,10 +18,15 @@ import Divider from '@mui/material/Divider';
 import { useParams } from "react-router-dom";
 import { RETRIEVE_EXPANDED_ACCOUNT_DETAILS } from "../../../sagas/constants";
 import { ExpenseItem, Member } from "../../../types"
-import { find, get, mapValues, groupBy, sumBy, omit, filter } from "lodash";
+import { find, get, mapValues, groupBy, sumBy, omit, filter, includes, forEach } from "lodash";
 import { Button } from "@mui/material";
-import SummaryContent from "./components/SummaryContent";
+import SummaryComponent from "./components/SummaryComponent";
 import { setExpandedAccount } from "../../../actions/setExpandedAccountId";
+import { sortAndDeduplicateDiagnostics } from "typescript";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { IconButton } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -38,7 +43,7 @@ const lightTheme = createTheme({
       main: '#CC0000',
       light: '#CC0000',
       dark: '#CC0000',
-      contrastText: '#FFFFFF',
+      contrastText: '#CC0000',
     },
   },
 });
@@ -53,7 +58,13 @@ const Account = (props: any) => {
   const [memberPool, setMemberPool] = useState<Member[]>([]);
   const [isAddExpenseDialogOpen, setAddExpenseDialogOpen] = useState<boolean>(false);
   const [isMakePaymentDialogOpen, setMakePaymentDialogOpen] = useState<boolean>(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const [openedTab, setOpenedTab] = useState<number>(0);
+
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setOpenedTab(newValue);
+  };
 
   const handleAddExpenseItem = (event: any) => {
     event.preventDefault();
@@ -65,11 +76,25 @@ const Account = (props: any) => {
     setMakePaymentDialogOpen(true);
   }
 
+  const handleBackButton = (event: any) => {
+    event.preventDefault();
+    navigate('/home/dashboard');
+  }
+
+
   useEffect(() => {
-    if (props.stMembersDetails?.membersPool?.length > 0) {
-      setMemberPool(props.stMembersDetails?.membersPool);
+    if (props.stMembersDetails?.membersPool?.length > 0 && props.stExpandedAcctId && props.stAccounts?.length > 0) {
+      const contributingMemberIds = get(
+        find(props.stAccounts, { _id: props.stExpandedAcctId }),
+        "contributingMemberIds",
+        []
+      );
+      const contributingMembers = filter(props.stMembersDetails?.membersPool, obj =>
+        includes(contributingMemberIds, obj._id)
+      );
+      setMemberPool(contributingMembers);
     }
-  },[props.stMembersDetails]);
+  },[props.stExpandedAcctId, props.stMembersDetails, props.stAccounts]);
 
   useEffect(() => {
     if (accountId && props.stExpandedAcctId !== accountId) {
@@ -78,9 +103,6 @@ const Account = (props: any) => {
   },[accountId]);
 
   useEffect(() => {
-    console.log("props - stExpandedAcctId");
-    console.log(props.stExpandedAcctId);
-    console.log(props.stExpandedAccts[props.stExpandedAcctId]);
     if (!props.stExpandedAccts[props.stExpandedAcctId]) {
       dispatch({
         type: RETRIEVE_EXPANDED_ACCOUNT_DETAILS,
@@ -96,14 +118,39 @@ const Account = (props: any) => {
     expenseItem => sumBy(expenseItem, "amount")
   ), [props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails]);
 
-  const loaneesMapToPayToEachLoaner = useMemo(() => mapValues(
-    groupBy(props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails, "forMemberId"),
-    borrowerItems =>
-      mapValues(
-        groupBy(borrowerItems, "cashOutByMemberId"),
-        lenderItems => sumBy(lenderItems, "amount")
-      )
-  ), [props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails]);
+  const loaneesMapToPayToEachLoaner = useMemo(() => {
+    let mapRes = {};
+    forEach(memberPool, (lenderMember: any) => {
+      const lenderExpenseDetes= filter(
+        props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails,
+        item => item.forMemberId === lenderMember._id
+      );
+      let lenderRecord = {}
+      forEach(memberPool, (lendeeMember: any) => {
+        const lendeeExpenseDetes= filter(
+          lenderExpenseDetes,
+          item => item.cashOutByMemberId === lendeeMember._id
+        );
+        let newVal;
+        if (lendeeExpenseDetes?.length > 0) {
+          newVal = {
+            [lendeeMember._id]: sumBy(lendeeExpenseDetes, "amount")
+          }
+        } else {
+          newVal = {
+            [lendeeMember._id]: 0
+          }
+        }
+        
+        lenderRecord = { ...lenderRecord, ...newVal }
+      })
+      const newRecordy = {
+        [lenderMember._id]: { ...lenderRecord }
+      }
+      mapRes = { ...mapRes, ...newRecordy}
+    });
+    return mapRes;
+  }, [memberPool, props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails]);
 
   const loaneesMapRemainingToPay = useMemo(() => {
     const ret = mapValues(loaneesMapToPayToEachLoaner, (toPayDetes: any, loaneeId: any) => {
@@ -128,7 +175,7 @@ const Account = (props: any) => {
           ),
           "amount"
         );
-        console.log("loaneesMapRemainingToPay - totally");
+        console.log("loaneesMapRemainingToPay - total");
         console.log(totalPaymentsOfLoaneeToLoaner);
         return (adjustedBalanceOfLoanee < 0 ? 0 : adjustedBalanceOfLoanee) - totalPaymentsOfLoaneeToLoaner;
       });
@@ -148,6 +195,11 @@ const Account = (props: any) => {
     console.log("Loanee map to pay to loaner Totals changed");
     console.log(loaneesMapToPayToEachLoaner);
   },[loaneesMapToPayToEachLoaner])
+
+  useEffect(() => {
+    console.log("Expense details");
+    console.log(props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails);
+  },[props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails])
 
   useEffect(() => {
     console.log("Payment details");
@@ -185,6 +237,22 @@ const Account = (props: any) => {
             gap: '10px'
           }}
         >
+          <Box
+            className="globalFlexRow"
+            sx={{
+              justifyContent: 'flex-end'
+            }}>
+            <IconButton
+              sx={{
+                maxHeight: 40,
+                maxWidth: '3rem'
+              }}
+              onClick={handleBackButton}
+              aria-label="backButton"
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          </Box>
           <Item key={'expenseTitle'} elevation={3}>
             <div className="globalFlexRow">
               <Typography
@@ -218,130 +286,125 @@ const Account = (props: any) => {
               component="h2">
               Summary
             </Typography>
-            <SummaryContent
+            <SummaryComponent
               loaneesMapRemainingToPay={loaneesMapRemainingToPay}
               membersTotalLoanMap={membersTotalLoanMap}
               loaneesMapToPayToEachLoaner={loaneesMapToPayToEachLoaner}
             />
           </Item>
           <Item key={'expenseList'} elevation={3}>
-          <div
-            style= {{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '5rem',
-              minWidth: '1280px'
-            }}>
             <div
               style= {{
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '2.5rem'
+                flexDirection: 'row',
+                gap: '5rem',
+                minWidth: '1280px'
               }}>
-              <Typography
-                sx={{
-                  mt: 1.5,
-                  mb: 1.5,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: '2rem'
-                }}
-                variant="h5"
-                component="h2">
-                Expenses List
-                <Button
-                  onClick={handleAddExpenseItem}
-                  sx={{
-                    color: '#FFFFFF',
-                    backgroundColor: '#CC0000'
-                  }}
-                  variant="contained"
-                  color="primary">Add Expense</Button>
-              </Typography>
-              <Box
-                sx={{
-                  pt: 1.5,
-                  pb: 2.5,
+              <div
+                style= {{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '1rem',
-                  maxHeight: 700,
-                  overflowY: "auto",
-                }}
-              >
-                {props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails?.length > 0 ?
-                  props.stExpandedAccts[props.stExpandedAcctId].expenseDetails?.map((expenseItem: any) => (
-                    <ExpenseItemCard
-                      key={expenseItem._id}
-                      expenseName={expenseItem.name}
-                      loanerName={
-                        get(find(memberPool, { _id: expenseItem.cashOutByMemberId }), "name")
-                      }
-                      forName={
-                        get(find(memberPool, { _id: expenseItem.forMemberId }), "name")
-                      }
-                      amount={expenseItem.amount}
-                    />
-                )) :
-                <div />
-                }
-              </Box>
-            </div>
-            <div
-              style= {{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '2.5rem'
-              }}>
-              <Typography
-                sx={{
-                  mt: 1.5,
-                  mb: 1.5,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: '2rem'
-                }}
-                variant="h5"
-                component="h2">
-                Payments List
-                <Button
-                  onClick={handleMakePaymentItem}
+                  gap: '1rem'
+                }}>
+                <Typography
                   sx={{
-                    color: '#FFFFFF',
-                    backgroundColor: '#CC0000'
+                    mt: 1.5,
+                    mb: 1.5,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '2rem'
                   }}
-                  variant="contained"
-                  color="primary">Add Payment</Button>
-              </Typography>
-              <Box
-                sx={{
-                  pt: 1.5,
-                  pb: 2.5,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                  maxHeight: 700,
-                  overflowY: "auto",
-                }}
-              >
-                {props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails?.length > 0 ?
-                  props.stExpandedAccts[props.stExpandedAcctId].paymentDetails?.map((paymentItem: any) => (
-                    <PaymentItemCard
-                      key={paymentItem._id}
-                      payorName={
-                        get(find(memberPool, { _id: paymentItem.paidByMemberId }), "name")
-                      }
-                      payeeName={
-                        get(find(memberPool, { _id: paymentItem.paidToMemberId }), "name")
-                      }
-                      amount={paymentItem.amount}
-                    />
-                )) :
-                <div />
-                }
-              </Box>
+                  variant="h5"
+                  component="h2">
+                  Expenses
+                </Typography>
+                <Tabs value={openedTab} onChange={handleTabChange} aria-label="Account tabs">
+                  <Tab label="Expenses" />
+                  <Tab label="Payments" />
+                </Tabs>
+                <div className="globalFlexRow">
+                  <Box
+                    sx={{
+                      pt: 1.5,
+                      pb: 2.5,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem',
+                      maxHeight: 700,
+                      minWidth: '70em',
+                      overflowY: "auto",
+                    }}
+                  >
+                    {openedTab === 0 ?
+                      (props.stExpandedAccts[props.stExpandedAcctId]?.expenseDetails?.length > 0 ?
+                          props.stExpandedAccts[props.stExpandedAcctId].expenseDetails?.map((expenseItem: any) => (
+                            <ExpenseItemCard
+                              key={expenseItem._id}
+                              expenseName={expenseItem.name}
+                              loanerName={
+                                get(find(memberPool, { _id: expenseItem.cashOutByMemberId }), "name")
+                              }
+                              forName={
+                                get(find(memberPool, { _id: expenseItem.forMemberId }), "name")
+                              }
+                              amount={expenseItem.amount}
+                            />
+                        )) :
+                        <div />
+                      ) :
+                      (props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails?.length > 0 ?
+                          props.stExpandedAccts[props.stExpandedAcctId].paymentDetails?.map((paymentItem: any) => (
+                            <PaymentItemCard
+                              key={paymentItem._id}
+                              payorName={
+                                get(find(memberPool, { _id: paymentItem.paidByMemberId }), "name")
+                              }
+                              payeeName={
+                                get(find(memberPool, { _id: paymentItem.paidToMemberId }), "name")
+                              }
+                              amount={paymentItem.amount}
+                            />
+                        )) :
+                        <div />
+                      )
+                    }
+                  </Box>
+                  <Box
+                    className="globalFlexColumn"
+                    sx={{
+                      pt: '12px'
+                    }}>
+                    <Button
+                      onClick={handleAddExpenseItem}
+                      sx={{
+                        color: '#CC0000',
+                        backgroundColor: '#FFFFFF'
+                      }}
+                      variant="outlined"
+                      color="primary">Add Expense</Button>
+                    <Button
+                      onClick={handleMakePaymentItem}
+                      sx={{
+                        color: '#CC0000',
+                        backgroundColor: '#FFFFFF'
+                      }}
+                      variant="outlined"
+                      color="primary"
+                    >Add Payment</Button>
+                    <Button
+                      disabled
+                      onClick={handleMakePaymentItem}
+                      sx={{
+                        color: '#CC0000',
+                        backgroundColor: '#FFFFFF'
+                      }}
+                      variant="outlined"
+                      color="primary"
+                    >Close Account</Button>
+                  </Box>
+                </div>
+              </div>
             </div>
-          </div>
           </Item>
         </div>
       </ThemeProvider>
@@ -353,6 +416,7 @@ const mapStateToProps = (state:any) => ({
   stExpandedAccts: state.currentOpenedAccount.expandedAcctDetails,
   stExpandedAcctId: state.currentOpenedAccount.expandedAcctId,
   stMembersDetails: state.membersDetails,
+  stAccounts: state.userAccounts.accounts
 });
 
 export default connect(mapStateToProps, null)(Account);
