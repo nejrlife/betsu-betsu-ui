@@ -5,16 +5,16 @@ const Team = () => {
   const data = {
     memberList :[
       {
-        name:"Arth",
+        name:"Aki",
       },
       {
-        name:"Braw",
+        name:"Buddy",
       },
       {
-        name:"Craw",
+        name:"Centy",
       },
       {
-        name:"Marms",
+        name:"Munni",
       },
     ]
   };

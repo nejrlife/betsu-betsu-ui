@@ -105,7 +105,7 @@ const SummaryComponent = (props: any) => {
                         <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "payTo"} sx={{ color: 'text.secondary', mb: 1.5, mt: 2.5 }}>Pay to</Typography>
                         <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "namey"} variant="h6" sx={{ mb: 1.5, mt: 2.5 }}>{ get(find(props.stMembersDetails?.membersPool, { _id: loanerAndBalanceDetes?.loanerId }), "name") }</Typography>
                         {loanerAndBalanceDetes?.remainingBalance !== 0 ?
-                          (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "remBal"} variant="h5" sx={{ color: '#5B2D8B', mb: 1.5, mt: 2.5 }}>{ loanerAndBalanceDetes?.remainingBalance }</Typography>) :
+                          (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "remBal"} variant="h5" sx={{ color: '#5B2D8B', mb: 1.5, mt: 2.5 }}>{ loanerAndBalanceDetes?.remainingBalance?.toFixed(2) }</Typography>) :
                           (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "paid"} variant="h5" sx={{ color: '#3A7F5A', mb: 1.5, mt: 2.5 }}>PAID</Typography>)
                         }
                       </div>
@@ -143,9 +143,9 @@ const SummaryComponent = (props: any) => {
                   <TableCell key={row.memberId + "rowCell"} component="th" scope="row">
                     {row.memberName}
                   </TableCell>
-                  <TableCell key={"detailTableCell3"}align="right">{row.memberTotalLoaned}</TableCell>
+                  <TableCell key={"detailTableCell3"}align="right">{row.memberTotalLoaned?.toFixed(2)}</TableCell>
                   {sortedMembers && sortedMembers.map((member: any) =>
-                    <TableCell key={row.memberId + "" + member._id + "cell"} align="right">{row[member._id]}</TableCell>)
+                    <TableCell key={row.memberId + "" + member._id + "cell"} align="right">{row[member._id]?.toFixed(2)}</TableCell>)
                   }
                 </TableRow>
               ))}
