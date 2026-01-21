@@ -240,7 +240,7 @@ const Account = (props: any) => {
           <Box
             className="globalFlexRow"
             sx={{
-              justifyContent: 'flex-end'
+              justifyContent: 'flex-start'
             }}>
             <IconButton
               sx={{
@@ -340,6 +340,7 @@ const Account = (props: any) => {
                           props.stExpandedAccts[props.stExpandedAcctId].expenseDetails?.map((expenseItem: any) => (
                             <ExpenseItemCard
                               key={expenseItem._id}
+                              expenseId={expenseItem._id}
                               expenseName={expenseItem.name}
                               loanerName={
                                 get(find(memberPool, { _id: expenseItem.cashOutByMemberId }), "name")
