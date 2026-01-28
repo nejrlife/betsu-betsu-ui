@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useMemo, useEffect  } from "react";
 import { connect } from "react-redux";
 import "./Dashboard.less";
-import idPic from "../../assets/img/placeholder-id.jpg";
 import { RETRIEVE_ACCOUNT_DETAILS_BY_MEMBER } from "../../sagas/constants";
 import WelcomeBanner from './WelcomeBanner';
 import {
@@ -14,9 +13,7 @@ const Dashboard = (props: any) => {
     dispatch  
   } = props;
 
-  const [userName, setUserName] = useState<string>('');
   const location = useLocation();
-  const [userLastLogin, setUserLastLogin] = useState<string>('');
 
   
   useEffect(() => {
@@ -30,20 +27,19 @@ const Dashboard = (props: any) => {
     }
   },[props.memberId, props.retrieveAccountDetailsByMember]);
 
-  useEffect(() => {
-    setUserName("Fenn Tonn");
-    setUserLastLogin("02/14/2025");
-  }, []);
-  
+  const currentMember = useMemo(
+    () => props.membersPool?.find((member: any) => member._id === props.memberId),
+    [props.membersPool, props.memberId]
+  );
+
   return (
     <>
       <div className='grey-box dashboardContainer'>
         {location.pathname === '/home/dashboard' &&
           <>
           <WelcomeBanner
-            idPic={idPic}
-            userName={userName}
-            userLastLogin={userLastLogin}
+            userName={currentMember?.name ?? ""}
+            avatarKey={currentMember?.avatarKey ?? ""}
           />
           <hr />
           </>
@@ -58,6 +54,7 @@ const mapStateToProps = (state:any) => ({
   userToken: state.authenticateUser.userToken,
   memberId: state.authenticateUser.memberId,
   retrieveAccountDetailsByMember: state.userAccounts.accounts,
+  membersPool: state.membersDetails?.membersPool
 });
 
 export default connect(mapStateToProps, null)(Dashboard);

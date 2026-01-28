@@ -25,6 +25,7 @@ export interface MembersDetails {
 export interface Member {
   id: string;
   name: string;
+  avatarKey: string;
 }
 
 export interface UserAccounts {
