@@ -20,25 +20,27 @@ const PaymentItemCard = (props: any) => {
   // );
   return (
     <Card
-      variant="outlined"
       sx={{
         minHeight: "fit-content",
         minWidth: "fit-content",
-        borderRadius: 3,
-        borderColor: "rgba(44, 49, 87, 0.35)",
+        borderRadius: 4,
+        border: "1px solid var(--border-subtle)",
         bgcolor: "var(--bg-child)",
-        px: 2.25,
-        py: 1.75,
-        boxShadow:
-          "0 10px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06)",
-        backdropFilter: "blur(6px)",
-        transition: "transform 160ms ease, box-shadow 160ms ease",
+        px: 2.75,
+        py: 2,
+        position: "relative",
+        zIndex: 0,
+        overflow: "visible",
+        boxShadow: "rgba(0, 31, 44, 0.4) 0px 3px 9px -4px",
+        transition: "box-shadow 180ms ease, border-color 180ms ease",
         "&:hover": {
-          transform: "translateY(-2px)",
           boxShadow:
-            "0 18px 38px rgba(0,0,0,0.14), 0 4px 10px rgba(0,0,0,0.08)",
+            "0 18px 44px rgba(42, 58, 51, 0.12), 0 6px 14px rgba(42, 58, 51, 0.07)",
+          borderColor: "var(--primary-highlight-strong)",
+          zIndex: 1,
         },
-    }}>
+      }}
+    >
       <CardContent
         sx={{
           padding: 2,
