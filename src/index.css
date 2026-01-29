@@ -13,39 +13,39 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  /* Brand */
-  --primary-1: #2ECC71;
-  --primary-2: #A8E6C3;
-  --primary-3: #1E8F5A;
-  --primary-highlight: #D9F3E6;
-  --primary-highlight-strong: #C7ECDC;
+/* Brand */
+  --primary-1: #E6F2EC;
+  --primary-2: #F2F8F5;
+  --primary-3: #CFE3D8;
+  --primary-highlight: #F5FBF8;
+  --primary-highlight-strong: #BFE7D3;
+
   /* Backgrounds */
-  --bg-app: #F6F8F7;
+  --bg-app: #FCFDFC;
   --bg-section: #FFFFFF;
-  --bg-section-alt: #F9FBFA;
-  --bg-child: #EAF4EF;
+  --bg-section-alt: #FAFCFB;
+  --bg-child: #F3F8F5;
 
   /* Text */
-  --text-primary: #1F2A24;
-  --text-secondary: #6F8278;
+  --text-primary: #2A3A33;
+  --text-secondary: #8A9E93;
 
   /* Headings */
-  --heading-green: #1E8F5A;
-  --heading-purple: #5B3A8E;
-  --heading-gold: #C9A24D;
+  --heading-green: #6F9F8A;
+  --heading-purple: #8C82B8;
+  --heading-gold: #D9C27A;
 
   /* Buttons */
-  /* Buttons (distinct from brand) */
---btn-primary-bg: #22B573;
---btn-primary-hover: #1E9E64;
---btn-primary-text: #FFFFFF;
+  --btn-primary-bg: #8FCFB2;
+  --btn-primary-hover: #7DBFA1;
+  --btn-primary-text: #FFFFFF;
 
---btn-secondary-bg: #FFFFFF;
---btn-secondary-text: #2F7D5B;
---btn-secondary-border: #BFD8CC;
+  --btn-secondary-bg: #FFFFFF;
+  --btn-secondary-text: #6F9F8A;
+  --btn-secondary-border: #D7E6DE;
 
---btn-tertiary-text: #5C7F6E;
---btn-tertiary-hover-bg: rgba(46, 204, 113, 0.08);
+  --btn-tertiary-text: #8AA69A;
+  --btn-tertiary-hover-bg: rgba(143, 207, 178, 0.14);
 
 }
 

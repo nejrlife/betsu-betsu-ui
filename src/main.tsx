@@ -11,7 +11,7 @@ export const store = configureStore();
 const bgUrl = import.meta.env.VITE_BG_URL;
 document.documentElement.style.setProperty(
   "--app-bg",
-  `url(${bgUrl ? bgUrl : "../bg.jpg"})`
+  `url(${bgUrl ? bgUrl : "../low-poly-grid-haikei.svg"})`
 );
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
