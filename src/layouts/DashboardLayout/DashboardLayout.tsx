@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import {
   Outlet, useNavigate, useLocation
 } from "react-router-dom";
-import Header from "../../components/Header/Header";
 import SideNavBar from "../../components/SideNavBar/SideNavBar";
 import "./DashboardLayout.less";
 
@@ -18,7 +17,6 @@ const DashboardLayout = () => {
 
   const layout = (
     <div className="layoutWidth">
-      <Header />
       <div className='dashboardFlex'>
         <SideNavBar />
         <div className='outletClass'>
