@@ -253,12 +253,13 @@ const Account = (props: any) => {
               <ArrowBackIcon />
             </IconButton>
           </Box>
-          <Item key={'expenseTitle'} elevation={3}>
+          <Item key={'expenseTitle'} elevation={3} sx={{ backgroundColor: "var(--bg-section-alt)" }}>
             <div className="globalFlexRow">
               <Typography
                 sx={{
                   mt: 1.5,
-                  mb: 1.5
+                  mb: 1.5,
+                  color: "var(--text-primary)"
                 }}
                 variant="h5"
                 component="h2">
@@ -268,7 +269,7 @@ const Account = (props: any) => {
                 sx={{
                   mt: 1.5,
                   mb: 1.5,
-                  color: '#5B2D8B'
+                  color: "var(--heading-purple)"
                 }}
                 variant="h5"
                 component="h2">
@@ -276,15 +277,16 @@ const Account = (props: any) => {
               </Typography>
             </div>
           </Item>
-          <Item key={'expenseSummary'} elevation={3}>
-            <Typography
-              sx={{
-                mt: 1.5,
-                mb: 1.5
-              }}
-              variant="h5"
-              component="h2">
-              Summary
+          <Item key={'expenseSummary'} elevation={3} sx={{ backgroundColor: "var(--bg-section-alt)" }}>
+              <Typography
+                sx={{
+                  mt: 1.5,
+                  mb: 1.5,
+                  color: "var(--text-primary)"
+                }}
+                variant="h5"
+                component="h2">
+                Summary
             </Typography>
             <SummaryComponent
               loaneesMapRemainingToPay={loaneesMapRemainingToPay}
@@ -292,7 +294,7 @@ const Account = (props: any) => {
               loaneesMapToPayToEachLoaner={loaneesMapToPayToEachLoaner}
             />
           </Item>
-          <Item key={'expenseList'} elevation={3}>
+          <Item key={'expenseList'} elevation={3} sx={{ backgroundColor: "var(--bg-section-alt)" }}>
             <div
               style= {{
                 display: 'flex',
@@ -312,21 +314,25 @@ const Account = (props: any) => {
                     mb: 1.5,
                     display: 'flex',
                     flexDirection: 'row',
-                    gap: '2rem'
+                    gap: '2rem',
+                    color: "var(--text-primary)"
                   }}
                   variant="h5"
                   component="h2">
                   Expenses
                 </Typography>
-                <Tabs value={openedTab} onChange={handleTabChange} aria-label="Account tabs">
+                <Tabs className="accountTabs" value={openedTab} onChange={handleTabChange} aria-label="Account tabs">
                   <Tab label="Expenses" />
                   <Tab label="Payments" />
                 </Tabs>
                 <div className="globalFlexRow">
                   <Box
+                    className="accountItemsSection"
                     sx={{
                       pt: 1.5,
                       pb: 2.5,
+                      backgroundColor: "var(--bg-section-alt)",
+                      backgroundImage: "none",
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '1rem',
@@ -377,31 +383,44 @@ const Account = (props: any) => {
                     }}>
                     <Button
                       onClick={handleAddExpenseItem}
+                      variant="contained"
                       sx={{
-                        color: '#CC0000',
-                        backgroundColor: '#FFFFFF'
+                        backgroundColor: "var(--btn-primary-bg)",
+                        color: "var(--btn-primary-text)",
+                        "&:hover": {
+                          backgroundColor: "var(--btn-primary-hover)",
+                        },
                       }}
-                      variant="outlined"
-                      color="primary">Add Expense</Button>
+                    >
+                      Add Expense
+                    </Button>
                     <Button
                       onClick={handleMakePaymentItem}
+                      variant="contained"
                       sx={{
-                        color: '#CC0000',
-                        backgroundColor: '#FFFFFF'
+                        backgroundColor: "var(--btn-primary-bg)",
+                        color: "var(--btn-primary-text)",
+                        "&:hover": {
+                          backgroundColor: "var(--btn-primary-hover)",
+                        },
                       }}
-                      variant="outlined"
-                      color="primary"
-                    >Add Payment</Button>
+                    >
+                      Add Payment
+                    </Button>
                     <Button
                       disabled
                       onClick={handleMakePaymentItem}
+                      variant="contained"
                       sx={{
-                        color: '#CC0000',
-                        backgroundColor: '#FFFFFF'
+                        backgroundColor: "var(--btn-primary-bg)",
+                        color: "var(--btn-primary-text)",
+                        "&:hover": {
+                          backgroundColor: "var(--btn-primary-hover)",
+                        },
                       }}
-                      variant="outlined"
-                      color="primary"
-                    >Close Account</Button>
+                    >
+                      Close Account
+                    </Button>
                   </Box>
                 </div>
               </div>

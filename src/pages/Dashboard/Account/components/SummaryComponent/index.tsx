@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Button } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { connect } from "react-redux";
 import { map, get, find, forEach, omit, orderBy, filter, set } from "lodash";
 import Table from '@mui/material/Table';
@@ -17,6 +18,29 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+
+const secondaryButtonTheme = createTheme({
+  palette: {
+    secondary: {
+      main: "#FFFFFF",
+      contrastText: "#2F7D5B",
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        containedSecondary: {
+          backgroundColor: "#FFFFFF",
+          color: "#2F7D5B",
+          border: "1px solid #BFD8CC",
+          "&:hover": {
+            backgroundColor: "#FFFFFF",
+          },
+        },
+      },
+    },
+  },
+});
 
 const SummaryComponent = (props: any) => {
   
@@ -85,12 +109,18 @@ const SummaryComponent = (props: any) => {
         sx={{
           minHeight: "fit-content",
           maxWidth: 800,
+          backgroundColor: "var(--bg-section-alt)",
         }}>
         <CardContent>
           {loaneesMapToPayToEachLoaner ?
               loaneesMapToPayToEachLoaner.map((details: any) => (
                 <div key={details?.loaneeId + "theSummary"}>
-                  <Typography key={details?.loaneeId + "summaryWord1"} variant="h5" component="div">
+                  <Typography
+                    key={details?.loaneeId + "summaryWord1"}
+                    variant="h5"
+                    component="div"
+                    sx={{ color: "var(--text-secondary)" }}
+                  >
                     { get(find(props.stMembersDetails?.membersPool, { _id: details?.loaneeId }), "name") }
                   </Typography>
                   {
@@ -102,11 +132,11 @@ const SummaryComponent = (props: any) => {
                           alignItems: 'baseline'
                         }}
                         >
-                        <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "payTo"} sx={{ color: 'text.secondary', mb: 1.5, mt: 2.5 }}>Pay to</Typography>
-                        <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "namey"} variant="h6" sx={{ mb: 1.5, mt: 2.5 }}>{ get(find(props.stMembersDetails?.membersPool, { _id: loanerAndBalanceDetes?.loanerId }), "name") }</Typography>
+                        <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "payTo"} sx={{ color: "var(--text-secondary)", mb: 1.5, mt: 2.5 }}>Pay to</Typography>
+                        <Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "namey"} variant="h6" sx={{ color: "var(--text-secondary)", mb: 1.5, mt: 2.5 }}>{ get(find(props.stMembersDetails?.membersPool, { _id: loanerAndBalanceDetes?.loanerId }), "name") }</Typography>
                         {loanerAndBalanceDetes?.remainingBalance !== 0 ?
-                          (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "remBal"} variant="h5" sx={{ color: '#5B2D8B', mb: 1.5, mt: 2.5 }}>{ loanerAndBalanceDetes?.remainingBalance?.toFixed(2) }</Typography>) :
-                          (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "paid"} variant="h5" sx={{ color: '#3A7F5A', mb: 1.5, mt: 2.5 }}>PAID</Typography>)
+                          (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "remBal"} variant="h5" sx={{ color: "var(--heading-purple)", mb: 1.5, mt: 2.5 }}>{ loanerAndBalanceDetes?.remainingBalance?.toFixed(2) }</Typography>) :
+                          (<Typography key={details?.loaneeId + "" + loanerAndBalanceDetes?.loanerId + "paid"} variant="h5" sx={{ color: "var(--heading-green)", mb: 1.5, mt: 2.5 }}>PAID</Typography>)
                         }
                       </div>
                     ))
@@ -117,7 +147,16 @@ const SummaryComponent = (props: any) => {
           }
         </CardContent>
         <CardActions>
-          <Button onClick={handleLearMoreClicked} size="small">Learn More</Button>
+          <ThemeProvider theme={secondaryButtonTheme}>
+            <Button
+              onClick={handleLearMoreClicked}
+              size="small"
+              variant="contained"
+              color="secondary"
+            >
+              Learn More
+            </Button>
+          </ThemeProvider>
         </CardActions>
         {tableOpened ? 
         (<TableContainer

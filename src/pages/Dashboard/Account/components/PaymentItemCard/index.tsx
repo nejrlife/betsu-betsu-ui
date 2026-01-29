@@ -26,7 +26,7 @@ const PaymentItemCard = (props: any) => {
         minWidth: "fit-content",
         borderRadius: 3,
         borderColor: "rgba(44, 49, 87, 0.35)",
-        bgcolor: "rgba(255,255,255,0.96)",
+        bgcolor: "var(--bg-child)",
         px: 2.25,
         py: 1.75,
         boxShadow:
@@ -52,7 +52,7 @@ const PaymentItemCard = (props: any) => {
             </Typography>
           </Grid>
           <Grid className="gridItem" item xs={1}>
-            <Typography variant="body1" sx={{ mb: 1.5, color: '#CC9900'}}>
+            <Typography variant="body1" sx={{ mb: 1.5, color: "var(--heading-gold)"}}>
                 { props.amount }
             </Typography>
           </Grid>

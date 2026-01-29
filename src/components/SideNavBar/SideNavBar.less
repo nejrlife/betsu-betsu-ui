@@ -12,15 +12,15 @@ li a {
   font-family: Microsoft JhengHei, arial;
   font-weight: bold;
   font-size: 28px;
-  color: #CC0000;
+  color: var(--text-secondary);
 }
 
 li a:hover {
-  color: #CC0000;
+  color: var(--text-secondary);
 }
 
 #sidebar a.active {
-  color: #666666;
+  color: var(--primary-highlight-strong);
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -61,7 +61,7 @@ li a:hover {
     font-family: Microsoft JhengHei, arial;
     font-weight: initial;
     font-size: 16px;
-    color: #CC0000;
+    color: var(--text-secondary);
     display: flex;
     height: 100%;
     align-items: center;
@@ -70,8 +70,8 @@ li a:hover {
   }
 
   li a.active {
-    color: #FFFFFF !important;
-    background-color: #CC0000;
+    color: var(--primary-highlight-strong) !important;
+    background-color: transparent;
   }
   #sidebar {
     display: flex;

@@ -4,7 +4,28 @@
 }
 .accountBalanceTable h3 {
   font-family: Microsoft JhengHei, arial;
-  color: #CC0000;
+  color: var(--text-primary);
+}
+
+.accountBalanceTable .MuiTab-root {
+  background-color: var(--bg-section-alt);
+  color: var(--text-secondary);
+}
+.accountBalanceTable .MuiTab-root.Mui-selected {
+  color: var(--primary-2);
+}
+.accountBalanceTable .MuiTabs-indicator {
+  background-color: var(--primary-2);
+}
+.accountBalanceTable .MuiAccordion-root {
+  background-color: var(--bg-section-alt);
+}
+.accountBalanceTable .MuiAccordion-root,
+.accountBalanceTable .MuiAccordionSummary-root,
+.accountBalanceTable .MuiAccordionDetails-root,
+.accountBalanceTable .MuiAccordionSummary-root .MuiTypography-root,
+.accountBalanceTable .MuiAccordionDetails-root h4 {
+  color: var(--text-secondary);
 }
 
 @media (max-width: 767.5px) {

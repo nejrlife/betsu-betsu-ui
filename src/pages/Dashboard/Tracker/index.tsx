@@ -145,6 +145,14 @@ const Tracker = (props: any) => {
                 </AccordionDetails>
                 <AccordionActions>
                   <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "var(--btn-primary-bg)",
+                      color: "var(--btn-primary-text)",
+                      "&:hover": {
+                        backgroundColor: "var(--btn-primary-bg)",
+                      },
+                    }}
                     onClick={() => {
                       navigate('/home/dashboard/account/' + item._id);
                     }}
@@ -173,13 +181,21 @@ const Tracker = (props: any) => {
                   <AccordionDetails>
                     <h4>The account was closed on {item.createdAt}</h4>
                   </AccordionDetails>
-                  <AccordionActions>
-                    <Button
-                      onClick={() => {
-                        navigate('/home/dashboard/account/' + item._id);
-                      }}
-                    >
-                      View Account
+                <AccordionActions>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "var(--btn-primary-bg)",
+                      color: "var(--btn-primary-text)",
+                      "&:hover": {
+                        backgroundColor: "var(--btn-primary-bg)",
+                      },
+                    }}
+                    onClick={() => {
+                      navigate('/home/dashboard/account/' + item._id);
+                    }}
+                  >
+                    View Account
                     </Button>
                   </AccordionActions>
                 </Accordion>

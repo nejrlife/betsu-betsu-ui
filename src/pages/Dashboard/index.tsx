@@ -34,7 +34,7 @@ const Dashboard = (props: any) => {
 
   return (
     <>
-      <div className='grey-box dashboardContainer'>
+      <div className='dashboardContainer'>
         {location.pathname === '/home/dashboard' &&
           <>
           <WelcomeBanner

@@ -3,6 +3,7 @@ import "./Login.less";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react"
 import { IS_AUTHENTICATED, LOG_IN } from "../../sagas/constants";
+import Button from "@mui/material/Button";
 import {
   useNavigate
 } from "react-router-dom";
@@ -117,11 +118,20 @@ const Login = (props: any) => {
               <div/>
               <span>{!isPasswordValid && <p>Please enter a valid password.</p>}</span>
             </div>
-            <button
+            <Button
               type="submit"
-              className="basic-button"
+              variant="contained"
+              sx={{
+                backgroundColor: "var(--btn-primary-bg)",
+                color: "var(--btn-primary-text)",
+                "&:hover": {
+                  backgroundColor: "var(--btn-primary-bg)",
+                },
+              }}
               // disabled={isButtonDisabled}
-            >Log In</button>
+            >
+              Log In
+            </Button>
           </div>
         </form>
       </div>
