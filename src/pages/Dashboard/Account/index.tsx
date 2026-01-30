@@ -154,20 +154,9 @@ const Account = (props: any) => {
 
   const loaneesMapRemainingToPay = useMemo(() => {
     const ret = mapValues(loaneesMapToPayToEachLoaner, (toPayDetes: any, loaneeId: any) => {
-      console.log("loaneesMapRemainingToPay - ret");
-      console.log(loaneeId);
-      console.log(toPayDetes);
       const remBal = mapValues(omit(toPayDetes, loaneeId), (remainingBalanceToLoaner: any, loanerId: any) => {
-        console.log("loaneesMapRemainingToPay - remBal");
-        console.log(loanerId);
-        console.log(remainingBalanceToLoaner);
         const loanerBalanceToLoanee = get(get(loaneesMapToPayToEachLoaner, loanerId), loaneeId);
-        console.log("loaneesMapRemainingToPay - loanerBalanceToLoanee");
-        console.log(loanerBalanceToLoanee);
-        console.log("loaneesMapRemainingToPay - loanerBalanceToLoanee");
-        
         const adjustedBalanceOfLoanee = remainingBalanceToLoaner - loanerBalanceToLoanee;
-        console.log(adjustedBalanceOfLoanee);
         const totalPaymentsOfLoaneeToLoaner = sumBy(
           filter(props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails, p =>
             p.paidByMemberId === loaneeId &&
@@ -175,14 +164,10 @@ const Account = (props: any) => {
           ),
           "amount"
         );
-        console.log("loaneesMapRemainingToPay - total");
-        console.log(totalPaymentsOfLoaneeToLoaner);
         return (adjustedBalanceOfLoanee < 0 ? 0 : adjustedBalanceOfLoanee) - totalPaymentsOfLoaneeToLoaner;
       });
       return remBal;
     });
-    console.log('loaneesMapRemainingToPay - ret 2');
-    console.log(ret);
     return ret;
     }, [loaneesMapToPayToEachLoaner, props.stExpandedAccts[props.stExpandedAcctId]?.paymentDetails]);
 

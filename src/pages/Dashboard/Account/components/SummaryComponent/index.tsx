@@ -61,10 +61,6 @@ const SummaryComponent = (props: any) => {
 
   const loaneesMapToPayDetails = useMemo(() => {
     let tableArr: any[] = [];
-    console.log("loaneesMapToPayDetails");
-    console.log(props?.membersTotalLoanMap);
-    console.log(props?.loaneesMapToPayToEachLoaner);
-    console.log(props?.stMembersDetails?.membersPool);
     forEach(sortedMembers, (memberDete: any) => {
       let tableRowObj = {};
       set(tableRowObj, "memberId", memberDete._id);
@@ -79,7 +75,6 @@ const SummaryComponent = (props: any) => {
       });
       tableArr.push(tableRowObj);
     })
-    console.log(tableArr);
     return tableArr;
   }, [props?.membersTotalLoanMap, props?.loaneesMapToPayToEachLoaner, sortedMembers]);
 
