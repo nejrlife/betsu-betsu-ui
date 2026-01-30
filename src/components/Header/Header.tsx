@@ -1,5 +1,7 @@
 import "./Header.less";
-import { FiLogOut } from "react-icons/fi"
+import LogoutIcon from "@mui/icons-material/Logout";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticatedClearDetails } from "../../actions/auth";
@@ -20,10 +22,18 @@ const Header = (props: any) => {
       <p className='js_framework'>React JS</p>
       <p className='heading'>betsu-betsu</p>
       <div className='logoutFlex'>
-        {props.isUserAuthenticated && <FiLogOut
-          onClick={handleLogout}
-          color='#FFFFFF'
-        />}  
+        {props.isUserAuthenticated && (
+          <Tooltip title="Logout" arrow>
+            <IconButton
+              className="logoutButton"
+              onClick={handleLogout}
+              aria-label="Logout"
+              size="small"
+            >
+              <LogoutIcon className="logoutIcon" />
+            </IconButton>
+          </Tooltip>
+        )}
       </div>  
     </div>
   )

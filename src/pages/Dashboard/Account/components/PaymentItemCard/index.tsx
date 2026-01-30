@@ -24,20 +24,31 @@ const PaymentItemCard = (props: any) => {
         minHeight: "fit-content",
         minWidth: "fit-content",
         borderRadius: 4,
-        border: "1px solid var(--border-subtle)",
-        bgcolor: "var(--bg-child)",
+        border: "1px solid #e5eee7",
+        bgcolor: "var(--bg-section)",
         px: 2.75,
         py: 2,
         position: "relative",
         zIndex: 0,
-        overflow: "visible",
-        boxShadow: "rgba(0, 31, 44, 0.4) 0px 3px 9px -4px",
-        transition: "box-shadow 180ms ease, border-color 180ms ease",
-        "&:hover": {
-          boxShadow:
-            "0 18px 44px rgba(42, 58, 51, 0.12), 0 6px 14px rgba(42, 58, 51, 0.07)",
-          borderColor: "var(--primary-highlight-strong)",
-          zIndex: 1,
+        overflow: "hidden",
+        boxShadow: "none",
+        // boxShadow: "0 12px 26px rgba(42, 58, 51, 0.08), 0 2px 6px rgba(42, 58, 51, 0.05)",
+        // transition: "box-shadow 180ms ease, border-color 180ms ease",
+        // "&:hover": {
+        //   boxShadow:
+        //     "0 18px 44px rgba(42, 58, 51, 0.12), 0 6px 14px rgba(42, 58, 51, 0.08)",
+        //   borderColor: "var(--primary-highlight-strong)",
+        //   zIndex: 1,
+        // },
+        "&:before": {
+          content: '""',
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: "6px",
+          backgroundColor: "var(--primary-3)",
+          borderRadius: "16px 0 0 16px",
         },
       }}
     >
@@ -54,7 +65,7 @@ const PaymentItemCard = (props: any) => {
             </Typography>
           </Grid>
           <Grid className="gridItem" item xs={1}>
-            <Typography variant="body1" sx={{ mb: 1.5, color: "var(--heading-gold)"}}>
+            <Typography variant="body1" sx={{ mb: 1.5, color: "var(--heading-gold)", fontWeight: 700 }}>
                 { props.amount }
             </Typography>
           </Grid>

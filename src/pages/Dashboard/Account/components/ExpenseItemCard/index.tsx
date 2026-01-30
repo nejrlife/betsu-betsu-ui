@@ -17,8 +17,8 @@ const ExpenseItemCard = (props: any) => {
     borderRadius: 4,
 
     // keep the "outlined" look, but don't rely on variant for it
-    border: "1px solid var(--border-subtle)",
-    bgcolor: "var(--bg-child)",
+    border: "1px solid #e5eee7",
+    bgcolor: "var(--bg-section)",
 
     px: 2.75,
     py: 2,
@@ -26,19 +26,29 @@ const ExpenseItemCard = (props: any) => {
     // IMPORTANT for shadows
     position: "relative",
     zIndex: 0,
-    overflow: "visible",
+    overflow: "hidden",
 
     // soft, diffused shadow like your reference
     boxShadow:
-      "rgba(0, 31, 44, 0.4) 0px 3px 9px -4px",
+      "none",
 
-    transition: "box-shadow 180ms ease, border-color 180ms ease",
+    // transition: "box-shadow 180ms ease, border-color 180ms ease",
 
-    "&:hover": {
-      boxShadow:
-        "0 18px 44px rgba(42, 58, 51, 0.12), 0 6px 14px rgba(42, 58, 51, 0.07)",
-      borderColor: "var(--primary-highlight-strong)",
-      zIndex: 1,
+    // "&:hover": {
+    //   boxShadow:
+    //     "0 18px 44px rgba(42, 58, 51, 0.12), 0 6px 14px rgba(42, 58, 51, 0.07)",
+    //   borderColor: "var(--primary-highlight-strong)",
+    //   zIndex: 1,
+    // },
+    "&:before": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: "6px",
+      backgroundColor: "var(--primary-2)",
+      borderRadius: "16px 0 0 16px",
     },
   }}
 >
@@ -65,7 +75,7 @@ const ExpenseItemCard = (props: any) => {
             </Typography>
           </Grid>
           <Grid className="gridItem" item xs={1}>
-            <Typography variant="body1" sx={{ mb: 1.5, color: "var(--heading-gold)"}}>
+            <Typography variant="body1" sx={{ mb: 1.5, color: "var(--heading-gold)", fontWeight: 700 }}>
                 { props.amount }
             </Typography>
           </Grid>
