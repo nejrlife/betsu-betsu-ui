@@ -308,8 +308,6 @@ export default function appReducer(state = INITIAL_STATE, action: any) {
       };
     case actions.ADD_ACCOUNT_SUCCESS: {
       const newAcc = action.payload.newAccount;
-      console.log("New Acc");
-      console.log(newAcc);
       return {
         ...state,
         userAccounts: {
@@ -342,8 +340,6 @@ export default function appReducer(state = INITIAL_STATE, action: any) {
         }
       };
     case actions.SET_EXPANDED_ACCOUNT_ID: {
-      console.log("Set expanded acct");
-      console.log(action);
       return {
         ...state,
         currentOpenedAccount: {

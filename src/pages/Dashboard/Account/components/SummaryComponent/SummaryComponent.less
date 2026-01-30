@@ -1,12 +1,70 @@
-.card {
-  width: 150px;
-  height: 150px;
-  box-shadow: 5px 5px 3px gray;
-  cursor: pointer;
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
 }
-.red {
-  background-color: #FF0000;
+
+.summaryCard {
+  display: grid;
+  grid-template-columns: 6px 1fr;
+  background: var(--bg-section);
+  border: 1px solid #e5eee7;
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 92px;
 }
-.yellow {
-  background-color: #FFDF25;
+
+.summaryCard__bar {
+  background-color: var(--primary-1);
+}
+
+.summaryCard__content {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summaryCard__title {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.summaryCard__row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.summaryCard__label {
+  color: var(--text-secondary);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.summaryCard__name {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.summaryCard__amount {
+  margin-left: auto;
+  color: var(--heading-purple);
+  font-weight: 600;
+}
+
+.summaryCard__amount--paid {
+  color: var(--heading-green);
+}
+
+.summaryActions {
+  margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+  .summaryCards {
+    grid-template-columns: 1fr;
+  }
 }
