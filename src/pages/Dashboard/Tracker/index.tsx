@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton } from "@mui/material";
+import Box from "@mui/material/Box";
 import AddAccountForm from "./components/AddAccountForm";
 
 const Tracker = (props: any) => {
@@ -40,6 +41,17 @@ const Tracker = (props: any) => {
   const handleAddAccount = (event: React.SyntheticEvent) => {
     event.preventDefault();
     setAddAcctDialogOpened(!addAcctDialogOpened);
+  };
+
+  const formatDate = (value: any) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
   };
 
   const usePrevious = (value:any) => {
@@ -127,7 +139,7 @@ const Tracker = (props: any) => {
         </Tabs>
         {openedTab === 1 && openAccounts && openAccounts.length > 0 ?
           (
-            <div>
+            <Box sx={{ pb: '1rem', backgroundColor: "var(--bg-section-alt)" }}>
               {openAccounts?.map((item, i) => (
                 <Accordion
                   key={'panel-' + item._id}
@@ -141,7 +153,7 @@ const Tracker = (props: any) => {
                   <Typography component="span">{item.name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <h4>The account was opened on {item.createdAt}</h4>
+                  <h4>The account was opened on {formatDate(item.createdAt)}</h4>
                 </AccordionDetails>
                 <AccordionActions>
                   <Button
@@ -162,10 +174,10 @@ const Tracker = (props: any) => {
                 </AccordionActions>
               </Accordion>
               ))}
-            </div>
+            </Box>
           ) : openedTab === 0 && closedAccounts && closedAccounts.length > 0 ?
             (
-              <div>
+              <Box sx={{ pb: '1rem', backgroundColor: "var(--bg-section-alt)" }}>
                 {closedAccounts?.map((item, i) => (
                   <Accordion
                     key={'panel-' + item._id}
@@ -179,7 +191,7 @@ const Tracker = (props: any) => {
                     <Typography component="span">{item.name}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <h4>The account was closed on {item.createdAt}</h4>
+                    <h4>The account was closed on {formatDate(item.createdAt)}</h4>
                   </AccordionDetails>
                 <AccordionActions>
                   <Button
@@ -200,7 +212,7 @@ const Tracker = (props: any) => {
                   </AccordionActions>
                 </Accordion>
                 ))}
-              </div>
+              </Box>
             ) :
             // (<Skeleton variant='rounded' width={680} height={150} />)
             (<div />)
